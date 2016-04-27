@@ -1,6 +1,6 @@
 <?
 
-require_once(__DIR__ . "/../Logging.php");
+require_once(__DIR__ . "/../logging.php");
 
 class Geofence extends IPSModule
 {
