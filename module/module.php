@@ -18,6 +18,7 @@ class Geofence extends IPSModule {
     public function ApplyChanges(){
         parent::ApplyChanges();
 
+		$id = $this->RegisterScript("GeofenceHook", "GeofenceHook", "<?\n?>");
 		$this->RegisterWebHook("/hook/geofence", $id);
         
     }
