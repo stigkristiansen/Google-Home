@@ -18,9 +18,10 @@ class Geofence extends IPSModule {
     public function ApplyChanges(){
         parent::ApplyChanges();
 		
-		$id = $this->RegisterScript("GeofenceHook", "GeofenceHook", "<?\n//Do not modify!\nrequire_once(IPS_GetKernelDirEx().\"scripts/__ipsmodule.inc.php\");\n
-			require_once(\"../modules/Geofence/module/module.php\");\n(new Geofence(".$this->InstanceID."))->HandleWebData();\n?>");
-		$this->RegisterWebHook("/hook/geofence", $id);
+		$ident="geofence".$this->InstanceID."hook";
+		$name="Geofence".$this->InstanceID."Hook";
+		$id = $this->RegisterScript($ident, $name, "<?\n//Do not modify!\nrequire_once(IPS_GetKernelDirEx().\"scripts/__ipsmodule.inc.php\");\nrequire_once(\"../modules/Geofence/module/module.php\");\n(new Geofence(".$this->InstanceID."))->HandleWebData();\n?>");
+		$this->RegisterWebHook("/hook/".$ident, $id);
         
     }
 
