@@ -1,0 +1,14 @@
+{ 
+    "id" :  "{C5271BF2-DDC9-4EA7-8467-A8C645500263}" , 
+    "name" :  "Geofence" , 
+    "type" :  3 , 
+    "vendor" :  "" , 
+    "aliases" : 
+    [ 
+        "Geofence"  
+    ] ,   
+    "parentRequirements" :  [] , 
+    "childRequirements" :  [] , 
+    "implemented" :  [] , 
+    "prefix" :  "GEO" 
+}
