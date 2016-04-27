@@ -20,7 +20,7 @@ class Geofence extends IPSModule {
 
 		$ident = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", IPS_Getname($this->InstanceID)))."Hook";
 		$name = IPS_Getname($this->InstanceID)."Hook";
-		$id = $this->RegisterScript($ident, $name, "<?\n//Do not modify!\n?>");
+		$id = $this->RegisterScript($ident, $name, "<?\n//Do not modify!\nrequire_once(IPS_GetKernelDirEx().\"scripts/__ipsmodule.inc.php\");\n?>");
 		$this->RegisterWebHook("/hook/geofence", $id);
         
     }
