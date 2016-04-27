@@ -1,8 +1,9 @@
 {
     "elements":
     [
-       
-	      { "type": "CheckBox", "name": "log", "caption": "Enable logging" }
+		{ "name": "Username", "type": "ValidationTextBox", "caption": "Username" },
+		{ "name": "Password", "type": "PasswordTextBox", "caption": "Password" }
+		{ "type": "CheckBox", "name": "log", "caption": "Enable logging" }
     ],
 
 }
