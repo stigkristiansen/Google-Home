@@ -23,7 +23,7 @@ class Geofence extends IPSModule {
         
     }
 
-    public HandleWebData() {
+    public function HandleWebData() {
 		$log = new Logging($this->ReadPropertyBoolean("log"), IPS_Getname($this->InstanceID));
 		
 		$username = IPS_GetProperty($this->InstanceID, "Username");
