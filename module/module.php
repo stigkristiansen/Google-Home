@@ -30,7 +30,22 @@ class Geofence extends IPSModule {
 		$username = IPS_GetProperty($this->InstanceID, "Username");
 		$password = IPS_GetProperty($this->InstanceID, "Password");
 		
-		$log->LogMessage($username.":".$password);
+		if($username!="" || $password!="") {
+			if(!isset($_SERVER['PHP_AUTH_USER']))
+				$_SERVER['PHP_AUTH_USER'] = "";
+			if(!isset($_SERVER['PHP_AUTH_PW']))
+				$_SERVER['PHP_AUTH_PW'] = "";
+
+			if(($_SERVER['PHP_AUTH_USER'] != $username) || ($_SERVER['PHP_AUTH_PW'] != $password)) {
+				header('WWW-Authenticate: Basic Realm="Geofence"');
+				header('HTTP/1.0 401 Unauthorized');
+				echo "Authorization required to access Symcon";
+		
+				return;
+			}
+		}
+		
+		$log->LogMessage("You are in!");
 
     }
 
