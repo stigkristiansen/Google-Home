@@ -22,8 +22,8 @@ class Geofence extends IPSModule
 
     
 
-	public function RegisterDevice($Device) {
-		$ident = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $Device));
+	public function RegisterUser($User) {
+		$ident = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $User));
 
 		$log = new Logging($this->ReadPropertyBoolean("log"), IPS_Getname($this->InstanceID));
 		
@@ -134,8 +134,36 @@ class Geofence extends IPSModule
 		$log->LogMessage("The device does not exists: ".$Device);
 		return false;
 	}
-
 	
+	private function CreateVariable($Parent, $Ident, $Name, $Type, $Profile = "") {
+		$id = @IPS_GetObjectIDByIdent($ident, $Parent);
+		if($id === false) {
+			$id = IPS_CreateVariable($Type);
+			IPS_SetParent($id, $Parent);
+			IPS_SetName($id, $Name);
+			IPS_SetIdent($id, $Ident);
+			if($Profile != "")
+				IPS_SetVariableCustomProfile($id, $Profile);
+		}
+		
+		return $id;
+	}
+	
+	
+	private function CreateInstance($Parent, $Ident, $Name, $ModuleId = "{485D0419-BE97-4548-AA9C-C083EB82E61E}") {
+		$id = @IPS_GetObjectIDByIdent($Ident, $Parent);
+		if($id === false) {
+			$id = IPS_CreateInstance($ModuleId);
+			IPS_SetParent($id, $Parent);
+			IPS_SetName($id, $Name);
+			IPS_SetIdent($id, $Ident);
+			
+			return $id;
+		} else
+			return false;
+		
+		
+	}
 	
 }
 
