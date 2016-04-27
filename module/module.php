@@ -10,14 +10,47 @@ class Geofence extends IPSModule
         parent::Create();
         
         $this->RegisterPropertyBoolean ("log", false );
+
+	$this->RegisterPropertyString("Username", "");
+	$this->RegisterPropertyString("Password", "");
 		
     
 	}
 
     public function ApplyChanges(){
         parent::ApplyChanges();
+
+	$sid = $this->RegisterScript("GeofenceHook", "GeofenceHook", "<? //Do not delete or modify.\ninclude(IPS_GetKernelDirEx().\"scripts/__ipsmodule.inc.php\");\ninclude(\"../modules/Geofence/module/module.php\");\n(new Geofence(".$this->InstanceID."))->HandleWebData();");
+	$this->RegisterHook("/hook/geofence", $sid);
         
         
+    }
+
+
+    private function RegisterWebHook($Hook, $TargetId) {
+	$id = IPS_GetInstanceListByModuleID("{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}");
+
+	if(sizeof($id)) {
+		$hooks = json_decode(IPS_GetProperty($ids[0], "Hooks"), true);
+
+		$hookExists = false;
+		$numHooks = sizeof($hooks);
+		for($x=0;$x<$numHooks;$x++) {
+			if($hooks[$x]['Hook']==$Hook) {
+				if($hooks[$x]['TargetID']==$TargetId)
+					return;
+            $hookExists = true;
+            $hooks[$x]['TargetID']= $TargetId;
+				break;
+			}
+		}
+			
+		if(!$hookExists)
+		   $hooks[] = Array("Hook" => $Hook, "TargetID" => $TargetId);
+		   
+		IPS_SetProperty($id[0], "Hooks", json_encode($hooks));
+		IPS_ApplyChanges($id[0]);
+	}
     }
 
     
