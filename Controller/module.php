@@ -2,7 +2,7 @@
 
 require_once(__DIR__ . "/../logging.php");
 
-class Geofence extends IPSModule {
+class GeofenceController extends IPSModule {
     
     public function Create(){
         parent::Create();
@@ -19,7 +19,7 @@ class Geofence extends IPSModule {
 		
 		$ident="geofence".$this->InstanceID;
 		$name="Geofence".$this->InstanceID."Hook";
-		$id = $this->RegisterScript($ident, $name, "<?\n//Do not modify!\nrequire_once(IPS_GetKernelDirEx().\"scripts/__ipsmodule.inc.php\");\nrequire_once(\"../modules/Geofence/module/module.php\");\n(new Geofence(".$this->InstanceID."))->HandleWebData();\n?>");
+		$id = $this->RegisterScript($ident, $name, "<?\n//Do not modify!\nrequire_once(IPS_GetKernelDirEx().\"scripts/__ipsmodule.inc.php\");\nrequire_once(\"../modules/Geofence/module/module.php\");\n(new GeofenceController(".$this->InstanceID."))->HandleWebData();\n?>");
 		$this->RegisterWebHook("/hook/".$ident, $id);
 		
 		$this->RegisterVariableBoolean( "Presence", "Presence", "~Presence", false );

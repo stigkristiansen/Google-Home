@@ -1,0 +1,14 @@
+{ 
+    "id" :  "{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}" , 
+    "name" :  "GeofenceUser" , 
+    "type" :  3 , 
+    "vendor" :  "" , 
+    "aliases" : 
+    [ 
+        "Geofence User"  
+    ] ,   
+    "parentRequirements" :  [] , 
+    "childRequirements" :  [] , 
+    "implemented" :  [] , 
+    "prefix" :  "GEOU" 
+}

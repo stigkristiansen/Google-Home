@@ -1,11 +1,11 @@
 { 
     "id" :  "{C5271BF2-DDC9-4EA7-8467-A8C645500263}" , 
-    "name" :  "Geofence" , 
+    "name" :  "GeofenceController" , 
     "type" :  3 , 
     "vendor" :  "" , 
     "aliases" : 
     [ 
-        "Geofence"  
+        "Geofence Controller"  
     ] ,   
     "parentRequirements" :  [] , 
     "childRequirements" :  [] , 
