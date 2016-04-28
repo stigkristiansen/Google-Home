@@ -69,7 +69,8 @@ class GeofenceController extends IPSModule {
 			
 			if($userExists) {
 				$log->LogMessage("Updating Presence for user ".IPS_GetName($user));
-				$presenceId = IPS_GetObjectIDByIdent("Presence", $user);
+				$presenceId = GetOrCreateVariable($user, "Presence", "Presence", 0, "~Presence");
+				//$presenceId = IPS_GetObjectIDByIdent("Presence", $user);
 				if($action=="arrival")
 					SetValue($presenceId, true);
 				else
@@ -77,9 +78,22 @@ class GeofenceController extends IPSModule {
 			} else
 				$log->LogMessage("Unknown user");
 			
-			$presenceId = IPS_GetObjectIDByIdent("Presence", $this->InstanceID);
+			$commonPresence = true;
+			$users=IPS_GetInstanceListByModuleID("{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}");
+			$size=sizeof($users);
+			for($x=0;$x<$size;$x++){
+				if(IPS_GetParent($users[$x])==$this->InstanceID);
+					$presenceId=IPS_GetObjectIDByIdent("Presence", $users[$x]);
+					if($presenceId!=false) {
+						if(!GetValue($presenceId)) {
+							$commonPresence = false;
+							break;
+						}
+					}
+			}
 			
-			
+			$commonPresenceId = GetOrCreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
+			SetValue($commonPresenceId, $commonPresence);
 		} else
 			$log->LogMessage("Invalid or missing \"user\" or \"action\" in URL");
 
@@ -129,7 +143,7 @@ class GeofenceController extends IPSModule {
 	}
 	
 	
-	private function CreateVariable($Parent, $Ident, $Name, $Type, $Profile = "") {
+	private function GetOrCreateVariable($Parent, $Ident, $Name, $Type, $Profile = "") {
 		$id = @IPS_GetObjectIDByIdent($ident, $Parent);
 		if($id === false) {
 			$id = IPS_CreateVariable($Type);
@@ -144,18 +158,16 @@ class GeofenceController extends IPSModule {
 	}
 	
 	
-	private function CreateInstance($Parent, $Ident, $Name, $ModuleId = "{485D0419-BE97-4548-AA9C-C083EB82E61E}") {
+	private function GetOrCreateInstance($Parent, $Ident, $Name, $ModuleId = "{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}") {
 		$id = @IPS_GetObjectIDByIdent($Ident, $Parent);
 		if($id === false) {
 			$id = IPS_CreateInstance($ModuleId);
 			IPS_SetParent($id, $Parent);
 			IPS_SetName($id, $Name);
 			IPS_SetIdent($id, $Ident);
-			
-			return $id;
-		} else
-			return false;
+		} 
 		
+		return $id;
 		
 	}
 	
