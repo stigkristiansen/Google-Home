@@ -56,11 +56,29 @@ class GeofenceController extends IPSModule {
 			$user=strtolower($_GET['user']);
 		
 		if($action!="" && $user!="") {
+			$children = IPS_GetChildrenIDs($this->InstanceID);
+			
+			$size = sizeof($children);
+			$userExists = false;
+			for($x=0;$x<$size;$x++) {
+				if($children[$x]==$user) {
+					$userExists=true;
+					break;
+				}
+			}
+			
+			if($userExists) {
+				$log->LogMessage("Updating Presence for user ".IPS_GetName($user));
+				$presenceId = IPS_GetObjectIDByIdent("Presence", $user);
+				if($action=="arrival")
+					SetValue($presenceId, true);
+				else
+					SetValue($presenceId, false);
+			} else
+				$log->LogMessage("Unknown user");
+			
 			$presenceId = IPS_GetObjectIDByIdent("Presence", $this->InstanceID);
-			if($action=="arrival")
-				SetValue($presenceId, true);
-			else
-				SetValue($presenceId, false);
+			
 			
 		} else
 			$log->LogMessage("Invalid or missing \"user\" or \"action\" in URL");
