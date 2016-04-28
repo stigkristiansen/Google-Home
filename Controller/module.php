@@ -22,7 +22,7 @@ class GeofenceController extends IPSModule {
 		$id = $this->RegisterScript($ident, $name, "<?\n//Do not modify!\nrequire_once(IPS_GetKernelDirEx().\"scripts/__ipsmodule.inc.php\");\nrequire_once(\"../modules/Geofence/Controller/module.php\");\n(new GeofenceController(".$this->InstanceID."))->HandleWebData();\n?>");
 		$this->RegisterWebHook("/hook/".$ident, $id);
 		
-		$this->RegisterVariableBoolean( "Presence", "Presence", "~Presence", false );
+		$this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
         
     }
 
@@ -69,8 +69,7 @@ class GeofenceController extends IPSModule {
 			
 			if($userExists) {
 				$log->LogMessage("Updating Presence for user ".IPS_GetName($user));
-				$presenceId = $this->GetOrCreateVariable($user, "Presence", "Presence", 0, "~Presence");
-				//$presenceId = IPS_GetObjectIDByIdent("Presence", $user);
+				$presenceId = $this->CreateVariable($user, "Presence", "Presence", 0, "~Presence");
 				if($action=="arrival")
 					SetValue($presenceId, true);
 				else
@@ -83,8 +82,8 @@ class GeofenceController extends IPSModule {
 			$size=sizeof($users);
 			for($x=0;$x<$size;$x++){
 				if(IPS_GetParent($users[$x])==$this->InstanceID);
-					$presenceId=IPS_GetObjectIDByIdent("Presence", $users[$x]);
-					if($presenceId!=false) {
+					$presenceId=$this->CreateVariable($users[$x], "Presence", "Presence", 0, "~Presence");
+					if($presenceId!==false) {
 						if(!GetValue($presenceId)) {
 							$commonPresence = false;
 							break;
@@ -92,7 +91,7 @@ class GeofenceController extends IPSModule {
 					}
 			}
 			
-			$commonPresenceId = $this->GetOrCreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
+			$commonPresenceId = $this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
 			SetValue($commonPresenceId, $commonPresence);
 		} else
 			$log->LogMessage("Invalid or missing \"user\" or \"action\" in URL");
@@ -143,8 +142,8 @@ class GeofenceController extends IPSModule {
 	}
 	
 	
-	private function GetOrCreateVariable($Parent, $Ident, $Name, $Type, $Profile = "") {
-		$id = @IPS_GetObjectIDByIdent($ident, $Parent);
+	private function CreateVariable($Parent, $Ident, $Name, $Type, $Profile = "") {
+		$id = @IPS_GetObjectIDByIdent($Ident, $Parent);
 		if($id === false) {
 			$id = IPS_CreateVariable($Type);
 			IPS_SetParent($id, $Parent);
@@ -158,7 +157,7 @@ class GeofenceController extends IPSModule {
 	}
 	
 	
-	private function GetOrCreateInstance($Parent, $Ident, $Name, $ModuleId = "{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}") {
+	private function CreateInstance($Parent, $Ident, $Name, $ModuleId = "{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}") {
 		$id = @IPS_GetObjectIDByIdent($Ident, $Parent);
 		if($id === false) {
 			$id = IPS_CreateInstance($ModuleId);
