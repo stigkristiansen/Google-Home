@@ -69,7 +69,7 @@ class GeofenceController extends IPSModule {
 			
 			if($userExists) {
 				$log->LogMessage("Updating Presence for user ".IPS_GetName($user));
-				$presenceId = GetOrCreateVariable($user, "Presence", "Presence", 0, "~Presence");
+				$presenceId = $this->GetOrCreateVariable($user, "Presence", "Presence", 0, "~Presence");
 				//$presenceId = IPS_GetObjectIDByIdent("Presence", $user);
 				if($action=="arrival")
 					SetValue($presenceId, true);
@@ -92,7 +92,7 @@ class GeofenceController extends IPSModule {
 					}
 			}
 			
-			$commonPresenceId = GetOrCreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
+			$commonPresenceId = $this->GetOrCreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
 			SetValue($commonPresenceId, $commonPresence);
 		} else
 			$log->LogMessage("Invalid or missing \"user\" or \"action\" in URL");
