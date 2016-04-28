@@ -57,7 +57,7 @@ class Geofence extends IPSModule {
 		
 		if($action!="" && $user!="") {
 			$presenceId = IPS_GetObjectIDByIdent("Presence", $this->InstanceID);
-			if($action="arrival")
+			if($action=="arrival")
 				SetValue($presenceId, true);
 			else
 				SetValue($presenceId, false);
