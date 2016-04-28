@@ -74,26 +74,29 @@ class GeofenceController extends IPSModule {
 					SetValue($presenceId, true);
 				else
 					SetValue($presenceId, false);
+				
+				$log->LogMessage("Updating Common Presence");
+				$commonPresence = false;
+				$users=IPS_GetInstanceListByModuleID("{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}");
+				$size=sizeof($users);
+				for($x=0;$x<$size;$x++){
+					if(IPS_GetParent($users[$x])==$this->InstanceID) {
+						$presenceId=$this->CreateVariable($users[$x], "Presence", "Presence", 0, "~Presence");
+						
+						if(GetValue($presenceId)) {
+							$commonPresence = true;
+							break;
+						}
+						
+					}
+				}
+				
+				$log->LogMessage("Updating Common Presence to ".$commonPresence);
+				$commonPresenceId = $this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
+				SetValue($commonPresenceId, $commonPresence);
 			} else
 				$log->LogMessage("Unknown user");
 			
-			$commonPresence = false;
-			$users=IPS_GetInstanceListByModuleID("{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}");
-			$size=sizeof($users);
-			for($x=0;$x<$size;$x++){
-				if(IPS_GetParent($users[$x])==$this->InstanceID) {
-					$presenceId=$this->CreateVariable($users[$x], "Presence", "Presence", 0, "~Presence");
-					
-					if(GetValue($presenceId)) {
-						$commonPresence = true;
-						break;
-					}
-					
-				}
-			}
-			
-			$commonPresenceId = $this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
-			SetValue($commonPresenceId, $commonPresence);
 		} else
 			$log->LogMessage("Invalid or missing \"user\" or \"action\" in URL");
 
@@ -126,23 +129,7 @@ class GeofenceController extends IPSModule {
 		}
     }
 
-	public function RegisterUser($User) {
-		$ident = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $User));
-
-		$log = new Logging($this->ReadPropertyBoolean("log"), IPS_Getname($this->InstanceID));
 		
-		
-	}
-	
-	public function UnregisterUser($User) {
-		$ident = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $User));
-		
-		$log = new Logging($this->ReadPropertyBoolean("log"), IPS_Getname($this->InstanceID));
-		
-		
-	}
-	
-	
 	private function CreateVariable($Parent, $Ident, $Name, $Type, $Profile = "") {
 		$id = @IPS_GetObjectIDByIdent($Ident, $Parent);
 		if($id === false) {
@@ -156,21 +143,8 @@ class GeofenceController extends IPSModule {
 		
 		return $id;
 	}
-	
-	
-	private function CreateInstance($Parent, $Ident, $Name, $ModuleId = "{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}") {
-		$id = @IPS_GetObjectIDByIdent($Ident, $Parent);
-		if($id === false) {
-			$id = IPS_CreateInstance($ModuleId);
-			IPS_SetParent($id, $Parent);
-			IPS_SetName($id, $Name);
-			IPS_SetIdent($id, $Ident);
-		} 
 		
-		return $id;
 		
-	}
-	
 }
 
 ?>
