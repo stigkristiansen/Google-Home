@@ -77,18 +77,19 @@ class GeofenceController extends IPSModule {
 			} else
 				$log->LogMessage("Unknown user");
 			
-			$commonPresence = true;
+			$commonPresence = false;
 			$users=IPS_GetInstanceListByModuleID("{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}");
 			$size=sizeof($users);
 			for($x=0;$x<$size;$x++){
-				if(IPS_GetParent($users[$x])==$this->InstanceID);
+				if(IPS_GetParent($users[$x])==$this->InstanceID) {
 					$presenceId=$this->CreateVariable($users[$x], "Presence", "Presence", 0, "~Presence");
-					if($presenceId!==false) {
-						if(!GetValue($presenceId)) {
-							$commonPresence = false;
-							break;
-						}
+					
+					if(GetValue($presenceId)) {
+						$commonPresence = true;
+						break;
 					}
+					
+				}
 			}
 			
 			$commonPresenceId = $this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
