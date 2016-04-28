@@ -21,6 +21,8 @@ class Geofence extends IPSModule {
 		$name="Geofence".$this->InstanceID."Hook";
 		$id = $this->RegisterScript($ident, $name, "<?\n//Do not modify!\nrequire_once(IPS_GetKernelDirEx().\"scripts/__ipsmodule.inc.php\");\nrequire_once(\"../modules/Geofence/module/module.php\");\n(new Geofence(".$this->InstanceID."))->HandleWebData();\n?>");
 		$this->RegisterWebHook("/hook/".$ident, $id);
+		
+		$this->RegisterVariableBoolean( "Presence", "Presence", "~Presence", false );
         
     }
 
@@ -45,7 +47,23 @@ class Geofence extends IPSModule {
 			}
 		}
 		
-		$log->LogMessage("You are in!");
+		$log->LogMessage("You are authenticated!");
+		
+		if (array_key_exists('action', $_GET))
+			$action=strtolower($_GET['action']);
+				
+		if (array_key_exists('user', $_GET))
+			$user=strtolower($_GET['user']);
+		
+		if($action!="" && $user!="") {
+			$presenceId = IPS_GetObjectIDByIdent("Presence");
+			if($action="arrival")
+				SetValue($presenceId, true);
+			else
+				SetValue($presenceId, false);
+			
+		} else
+			$log->LogMessage("Invalid or missing \"user\" or \"action\" in URL");
 
     }
 
