@@ -3,5 +3,9 @@
     [
 		{ "type": "CheckBox", "name": "log", "caption": "Enable logging" }
     ],
+    "actions":
+    [
+        { "type": "Button", "label": "Get URL", "onClick": "echo 'URLs: '.GEOU_GetURLs($id));" }
+    ],
 
 }
