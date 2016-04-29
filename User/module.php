@@ -21,7 +21,7 @@ class GeofenceUser extends IPSModule {
     }
 
 	public GetURLs() {
-		retun "This is a test\n>>This is line two..."
+		return "This is a test\n>>This is line two..."
 	}
 
 	
