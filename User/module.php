@@ -34,9 +34,9 @@ class GeofenceUser extends IPSModule {
 		}
 		
 		if($foundParent) {
-			$message = "http(s)://<server>/hook/geofence".$parent."?action=arrival&user=".$this->InstanceID;	
+			$message = "http(s)://server/hook/geofence".$parent."?action=arrival&user=".$this->InstanceID;	
 		} else
-			$message = "This user do not has a Geofence Controller as parent!";
+			$message = "The user does not have a Geofence Controller as parent!";
 		
 		return $message;
 	}
