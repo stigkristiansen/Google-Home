@@ -1,11 +1,7 @@
 {
-    "elements":
-    [
-		{ "type": "CheckBox", "name": "log", "caption": "Enable logging" }
-    ],
     "actions":
     [
         { "type": "Button", "label": "Get URL", "onClick": "echo GEOU_GetURLs($id);" }
-    ],
+    ]
 
 }

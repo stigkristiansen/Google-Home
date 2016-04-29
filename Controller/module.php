@@ -41,8 +41,8 @@ class GeofenceController extends IPSModule {
 			if(($_SERVER['PHP_AUTH_USER'] != $username) || ($_SERVER['PHP_AUTH_PW'] != $password)) {
 				header('WWW-Authenticate: Basic Realm="Geofence"');
 				header('HTTP/1.0 401 Unauthorized');
-				echo "Authorization required to access Symcon";
-		
+				echo "Authorization required to access Symcon and Geofence";
+				$log->LogMessage("Authentication needed or invalid username/password!");
 				return;
 			}
 		}
@@ -68,14 +68,14 @@ class GeofenceController extends IPSModule {
 			}
 			
 			if($userExists) {
-				$log->LogMessage("Updating Presence for user ".IPS_GetName($user));
 				$presenceId = $this->CreateVariable($user, "Presence", "Presence", 0, "~Presence");
 				if($action=="arrival")
-					SetValue($presenceId, true);
+					$presence = true;
 				else
-					SetValue($presenceId, false);
+					$presence = false;
+				SetValue($presenceId, $presence);
+				$log->LogMessage("Updated Presence for user ".IPS_GetName($user)." to ".$this->GetProfileValueName(IPS_GetVariable($presenceId)['VariableCustomProfile'], $presence));
 				
-				$log->LogMessage("Updating Common Presence");
 				$commonPresence = false;
 				$users=IPS_GetInstanceListByModuleID("{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}");
 				$size=sizeof($users);
@@ -91,9 +91,9 @@ class GeofenceController extends IPSModule {
 					}
 				}
 				
-				$log->LogMessage("Updating Common Presence to ".$commonPresence);
 				$commonPresenceId = $this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
 				SetValue($commonPresenceId, $commonPresence);
+				$log->LogMessage("Updated Common Presence to ".$this->GetProfileValueName(IPS_GetVariable($commonPresenceId)['VariableCustomProfile'], $commonPresence));
 			} else
 				$log->LogMessage("Unknown user");
 			
@@ -101,6 +101,20 @@ class GeofenceController extends IPSModule {
 			$log->LogMessage("Invalid or missing \"user\" or \"action\" in URL");
 
     }
+	
+	private function GetProfileValueName($Profile, $Value) {
+		$associations = IPS_GetVariableProfile($Profile)['Associations'];
+		
+		$size=sizeof($associations);
+		for($x=0;$x<$size;$x++) {
+		   if($associations[$x]['Value']==$Value) {
+				return $associations[$x]['Name'];
+			}
+		}
+
+		return "Invalid";
+
+	}
 
 
     private function RegisterWebHook($Hook, $TargetId) {
