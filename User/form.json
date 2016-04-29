@@ -5,7 +5,7 @@
     ],
     "actions":
     [
-        { "type": "Button", "label": "Get URL", "onClick": "echo 'URLs: '.GEOU_GetURLs($id);" }
+        { "type": "Button", "label": "Get URL", "onClick": "echo GEOU_GetURLs($id);" }
     ],
 
 }
