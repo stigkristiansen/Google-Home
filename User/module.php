@@ -21,7 +21,8 @@ class GeofenceUser extends IPSModule {
     }
 
 	public GetURLs() {
-		return "This is a test\nThis is line two...";
+		$message = "This is a test\nThis is line two...";
+		return $message;
 	}
 
 	
