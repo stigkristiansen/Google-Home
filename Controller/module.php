@@ -102,6 +102,41 @@ class GeofenceController extends IPSModule {
 
     }
 	
+	public function UnregisterUser($Username) {
+		$ident = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $Username);
+		$id = IPS_GetObjectIDByIdent(($ident, $this->InstanceID);
+		if($id!==false) {
+			return IPS_DeleteInstance($id);
+		}
+		
+		IPS_GetInstanceIDByName($Username, $this->InstanceID);
+		if($id!==false) {
+			return IPS_DeleteInstance($id);
+		}
+		
+		return false;
+	}
+
+	public function RegisterUser($Username) {
+		$ident = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $Username);
+		$id = IPS_GetObjectIDByIdent(($ident, $this->InstanceID);
+		if($id===false) {
+			$id = IPS_GetInstanceIDByName($Username, $this->InstanceID);
+			if($id===false) {
+				$id = IPS_CreateInstance("{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}");
+				IPS_SetName($id,$Username);
+				IPS_SetParent($id,$this->InstanceID);
+				IPS_SetIdent($id, $ident);
+				return true;
+			} else {
+				IPS_SetIdent($id, $ident);
+				return true;
+			}
+		}
+						
+		return false;
+	}
+	
 	private function GetProfileValueName($Profile, $Value) {
 		$associations = IPS_GetVariableProfile($Profile)['Associations'];
 		
