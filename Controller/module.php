@@ -106,11 +106,17 @@ class GeofenceController extends IPSModule {
 		$ident = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $Username));
 		$id = IPS_GetObjectIDByIdent($ident, $this->InstanceID);
 		if($id!==false) {
+			$vId = IPS_GetObjectIDByIdent("Presence", $id);
+			if($vId!==false)
+				IPS_DeleteVariable($vId);
 			return IPS_DeleteInstance($id);
 		}
 		
 		IPS_GetInstanceIDByName($Username, $this->InstanceID);
 		if($id!==false) {
+			$vId = IPS_GetObjectIDByName("Status", $id);
+			if($vId!==false)
+				IPS_DeleteVariable($vId);
 			return IPS_DeleteInstance($id);
 		}
 		
@@ -130,9 +136,10 @@ class GeofenceController extends IPSModule {
 				return true;
 			} else {
 				IPS_SetIdent($id, $ident);
+				
 				return true;
 			}
-		}
+		} 
 						
 		return false;
 	}
