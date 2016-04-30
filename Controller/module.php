@@ -103,7 +103,7 @@ class GeofenceController extends IPSModule {
     }
 	
 	public function UnregisterUser($Username) {
-		$ident = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $Username);
+		$ident = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $Username));
 		$id = IPS_GetObjectIDByIdent(($ident, $this->InstanceID);
 		if($id!==false) {
 			return IPS_DeleteInstance($id);
@@ -118,7 +118,7 @@ class GeofenceController extends IPSModule {
 	}
 
 	public function RegisterUser($Username) {
-		$ident = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $Username);
+		$ident = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $Username));
 		$id = IPS_GetObjectIDByIdent(($ident, $this->InstanceID);
 		if($id===false) {
 			$id = IPS_GetInstanceIDByName($Username, $this->InstanceID);
