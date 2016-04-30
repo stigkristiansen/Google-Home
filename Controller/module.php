@@ -112,7 +112,7 @@ class GeofenceController extends IPSModule {
 			return IPS_DeleteInstance($id);
 		}
 		
-		IPS_GetInstanceIDByName($Username, $this->InstanceID);
+		IPS_GetObjectIDByName($Username, $this->InstanceID);
 		if($id!==false) {
 			$vId = IPS_GetObjectIDByName("Status", $id);
 			if($vId!==false)
