@@ -11,7 +11,6 @@ class GeofenceController extends IPSModule {
 
 		$this->RegisterPropertyString("Username", "");
 		$this->RegisterPropertyString("Password", "");
-    
 	}
 
     public function ApplyChanges(){
@@ -23,7 +22,6 @@ class GeofenceController extends IPSModule {
 		$this->RegisterWebHook("/hook/".$ident, $id);
 		
 		$this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
-        
     }
 
     public function HandleWebData() {
@@ -99,7 +97,6 @@ class GeofenceController extends IPSModule {
 			
 		} else
 			$log->LogMessage("Invalid or missing \"user\" or \"action\" in URL");
-
     }
 	
 	public function UnregisterUser($Username) {
@@ -155,9 +152,7 @@ class GeofenceController extends IPSModule {
 		}
 
 		return "Invalid";
-
 	}
-
 
     private function RegisterWebHook($Hook, $TargetId) {
 		$id = IPS_GetInstanceListByModuleID("{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}");
@@ -184,7 +179,6 @@ class GeofenceController extends IPSModule {
 			IPS_ApplyChanges($id[0]);
 		}
     }
-
 		
 	private function CreateVariable($Parent, $Ident, $Name, $Type, $Profile = "") {
 		$id = @IPS_GetObjectIDByIdent($Ident, $Parent);
@@ -199,7 +193,6 @@ class GeofenceController extends IPSModule {
 		
 		return $id;
 	}
-		
 		
 }
 
