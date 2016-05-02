@@ -125,7 +125,7 @@ class GeofenceController extends IPSModule {
 						$delay = (int)$_GET['delay'];
 						$log->LogMessage("Running script with delay...");
 						IPS_SetScriptTimer($scriptId, $delay);
-					} else {}
+					} else {
 						$log->LogMessage("Running script...");
 						IPS_RunScript($scriptId);
 					}
