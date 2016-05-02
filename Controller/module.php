@@ -7,10 +7,14 @@ class GeofenceController extends IPSModule {
     public function Create(){
         parent::Create();
         
-        $this->RegisterPropertyBoolean ("log", false );
+        $this->RegisterPropertyBoolean ("Log", false );
 
 		$this->RegisterPropertyString("Username", "");
 		$this->RegisterPropertyString("Password", "");
+		$this->RegisterPropertyString("ArrivalScript1", "");
+		$this->RegisterPropertyString("ArrivalScript2", "");
+		$this->RegisterPropertyString("DepartureScript1", "");
+		$this->RegisterPropertyString("DepartureScript2", "");
 	}
 
     public function ApplyChanges(){
@@ -22,10 +26,11 @@ class GeofenceController extends IPSModule {
 		$this->RegisterWebHook("/hook/".$ident, $id);
 		
 		$this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
+		$this->CreateVariable($this->InstanceID, "Delay", "Delay", 1, "");
     }
 
     public function HandleWebData() {
-		$log = new Logging($this->ReadPropertyBoolean("log"), IPS_Getname($this->InstanceID));
+		$log = new Logging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
 		
 		$username = IPS_GetProperty($this->InstanceID, "Username");
 		$password = IPS_GetProperty($this->InstanceID, "Password");
@@ -47,32 +52,32 @@ class GeofenceController extends IPSModule {
 		
 		$log->LogMessage("You are authenticated!");
 		
-		if (array_key_exists('action', $_GET))
-			$action=strtolower($_GET['action']);
+		if (array_key_exists('cmd', $_GET))
+			$cmd=strtolower($_GET['cmd']);
 				
-		if (array_key_exists('user', $_GET))
-			$user=strtolower($_GET['user']);
+		if (array_key_exists('id', $_GET))
+			$userId=strtolower($_GET['id']);
 		
-		if($action!="" && $user!="") {
+		if($cmd!="" && $userId!="") {
 			$children = IPS_GetChildrenIDs($this->InstanceID);
 			
 			$size = sizeof($children);
 			$userExists = false;
 			for($x=0;$x<$size;$x++) {
-				if($children[$x]==$user) {
+				if($children[$x]==$userId) {
 					$userExists=true;
 					break;
 				}
 			}
 			
 			if($userExists) {
-				$presenceId = $this->CreateVariable($user, "Presence", "Presence", 0, "~Presence");
-				if($action=="arrival")
+				$presenceId = $this->CreateVariable($userId, "Presence", "Presence", 0, "~Presence");
+				if($cmd=="arrival")
 					$presence = true;
 				else
 					$presence = false;
 				SetValue($presenceId, $presence);
-				$log->LogMessage("Updated Presence for user ".IPS_GetName($user)." to ".$this->GetProfileValueName(IPS_GetVariable($presenceId)['VariableCustomProfile'], $presence));
+				$log->LogMessage("Updated Presence for user ".IPS_GetName($userId)." to ".$this->GetProfileValueName(IPS_GetVariable($presenceId)['VariableCustomProfile'], $presence));
 				
 				$commonPresence = false;
 				$users=IPS_GetInstanceListByModuleID("{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}");
@@ -92,6 +97,14 @@ class GeofenceController extends IPSModule {
 				$commonPresenceId = $this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
 				SetValue($commonPresenceId, $commonPresence);
 				$log->LogMessage("Updated Common Presence to ".$this->GetProfileValueName(IPS_GetVariable($commonPresenceId)['VariableCustomProfile'], $commonPresence));
+				
+				
+				
+				$delay = 0;
+				if(array_key_exists('delay', $_GET) && is_numeric($_GET['delay'])
+					$delay = (int)$_GET['delay'];
+				
+						
 			} else
 				$log->LogMessage("Unknown user");
 			

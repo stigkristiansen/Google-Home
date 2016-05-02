@@ -1,9 +1,13 @@
 {
     "elements":
     [
-		{ "name": "Username", "type": "ValidationTextBox", "caption": "Username" },
-		{ "name": "Password", "type": "PasswordTextBox", "caption": "Password" },
-		{ "type": "CheckBox", "name": "log", "caption": "Enable logging" }
+		{ "name": "Username", "type": "ValidationTextBox", "caption": "Username:" },
+		{ "name": "Password", "type": "PasswordTextBox", "caption": "Password:" },
+		{ "type": "SelectScript", "name": "ArrivalScript1", "caption": "Arrival script #1:" },
+		{ "type": "SelectScript", "name": "ArrivalScript2", "caption": "Arrival script #2:" },
+		{ "type": "SelectScript", "name": "DepartureScript1", "caption": "Departure script #1:" },
+		{ "type": "SelectScript", "name": "DepartureScript2", "caption": "Departure script #2:" },
+		{ "type": "CheckBox", "name": "Log", "caption": "Enable logging:" }
     ],
 
 }
