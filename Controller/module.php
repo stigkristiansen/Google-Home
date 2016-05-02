@@ -130,6 +130,8 @@ class GeofenceController extends IPSModule {
 						IPS_RunScript($scriptId);
 					}
 				}
+				
+				echo "OK";
 			} else
 				$log->LogMessage("Unknown user");
 			
