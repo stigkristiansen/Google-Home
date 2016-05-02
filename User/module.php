@@ -34,8 +34,11 @@ class GeofenceUser extends IPSModule {
 		}
 		
 		if($foundParent) {
-			$message = "/hook/geofence".$parent."?action=arrival&user=".$this->InstanceID."\n";
-			$message .= "/hook/geofence".$parent."?action=departure&user=".$this->InstanceID;
+			$message = "/hook/geofence".$parent."?cmd=arrival1&id=".$this->InstanceID."\n";
+			$message .= "/hook/geofence".$parent."?cmd=arrival2&id=".$this->InstanceID."\n";
+			$message .= "/hook/geofence".$parent."?cmd=departure1&id=".$this->InstanceID."\n";
+			$message .= "/hook/geofence".$parent."?cmd=departure2&id=".$this->InstanceID."\n\n";
+			$message .= "The parameter \"delay\" (in secounds) is optional for all commands.");
 		} else
 			$message = "The user does not have a Geofence Controller as parent!";
 		

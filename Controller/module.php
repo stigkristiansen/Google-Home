@@ -134,7 +134,7 @@ class GeofenceController extends IPSModule {
 				$log->LogMessage("Unknown user");
 			
 		} else
-			$log->LogMessage("Invalid or missing \"user\" or \"action\" in URL");
+			$log->LogMessage("Invalid or missing \"id\" or \"cmd\" in URL");
     }
 	
 	
