@@ -101,7 +101,7 @@ class GeofenceController extends IPSModule {
 				
 				
 				$delay = 0;
-				if(array_key_exists('delay', $_GET) && is_numeric($_GET['delay'])
+				if(array_key_exists('delay', $_GET) && is_numeric($_GET['delay']))
 					$delay = (int)$_GET['delay'];
 				
 						
