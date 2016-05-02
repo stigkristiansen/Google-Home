@@ -52,6 +52,9 @@ class GeofenceController extends IPSModule {
 		
 		$log->LogMessage("You are authenticated!");
 		
+		$cmd="";
+		$userId="";
+		
 		if (array_key_exists('cmd', $_GET))
 			$cmd=strtolower($_GET['cmd']);
 				
