@@ -11,10 +11,10 @@ class GeofenceController extends IPSModule {
 
 		$this->RegisterPropertyString("Username", "");
 		$this->RegisterPropertyString("Password", "");
-		$this->RegisterPropertyString("ArrivalScript1", "");
-		$this->RegisterPropertyString("ArrivalScript2", "");
-		$this->RegisterPropertyString("DepartureScript1", "");
-		$this->RegisterPropertyString("DepartureScript2", "");
+		$this->RegisterPropertyInteger("ArrivalScript1", "");
+		$this->RegisterPropertyInteger("ArrivalScript2", "");
+		$this->RegisterPropertyInteger("DepartureScript1", "");
+		$this->RegisterPropertyInteger("DepartureScript2", "");
 	}
 
     public function ApplyChanges(){
@@ -72,10 +72,30 @@ class GeofenceController extends IPSModule {
 			
 			if($userExists) {
 				$presenceId = $this->CreateVariable($userId, "Presence", "Presence", 0, "~Presence");
-				if($cmd=="arrival")
-					$presence = true;
-				else
-					$presence = false;
+				switch($cmd) {
+					case "arrival1":
+						$presence = true;
+						$scriptProperty = "ArrivalScript1";
+						break;
+					case "arrival2":
+						$presence = true;
+						$scriptProperty = "ArrivalScript2";
+						break;
+					case "departure1":
+						$presence = false;
+						$scriptProperty = "DepartureScript1";
+						break;
+					case "departure2":
+						$presence = false;
+						$scriptProperty = "DepartureScript2";
+						break;
+					default:
+						$presence = false;
+						$scriptProperty = "";
+						break;
+				}
+				
+				
 				SetValue($presenceId, $presence);
 				$log->LogMessage("Updated Presence for user ".IPS_GetName($userId)." to ".$this->GetProfileValueName(IPS_GetVariable($presenceId)['VariableCustomProfile'], $presence));
 				
@@ -98,13 +118,18 @@ class GeofenceController extends IPSModule {
 				SetValue($commonPresenceId, $commonPresence);
 				$log->LogMessage("Updated Common Presence to ".$this->GetProfileValueName(IPS_GetVariable($commonPresenceId)['VariableCustomProfile'], $commonPresence));
 				
-				
-				
-				$delay = 0;
-				if(array_key_exists('delay', $_GET) && is_numeric($_GET['delay']))
-					$delay = (int)$_GET['delay'];
-				
-						
+				$scriptId = $this->ReadPropertyInteger($scriptProperty);
+				$log->LogMessage("The script id is ".$scriptId);
+				if($scriptId>0) {
+					if(array_key_exists('delay', $_GET) && is_numeric($_GET['delay'])) {
+						$delay = (int)$_GET['delay'];
+						$log->LogMessage("Running script with delay...");
+						IPS_SetScriptTimer($scriptId, $delay);
+					} else {}
+						$log->LogMessage("Running script...");
+						IPS_RunScript($scriptId);
+					}
+				}
 			} else
 				$log->LogMessage("Unknown user");
 			
