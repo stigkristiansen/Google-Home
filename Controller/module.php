@@ -11,10 +11,10 @@ class GeofenceController extends IPSModule {
 
 		$this->RegisterPropertyString("Username", "");
 		$this->RegisterPropertyString("Password", "");
-		$this->RegisterPropertyInteger("ArrivalScript1", "");
-		$this->RegisterPropertyInteger("ArrivalScript2", "");
-		$this->RegisterPropertyInteger("DepartureScript1", "");
-		$this->RegisterPropertyInteger("DepartureScript2", "");
+		$this->RegisterPropertyInteger("ArrivalScript1", 0);
+		$this->RegisterPropertyInteger("ArrivalScript2", 0);
+		$this->RegisterPropertyInteger("DepartureScript1", 0);
+		$this->RegisterPropertyInteger("DepartureScript2", 0);
 	}
 
     public function ApplyChanges(){
@@ -90,11 +90,9 @@ class GeofenceController extends IPSModule {
 						$scriptProperty = "DepartureScript2";
 						break;
 					default:
-						$presence = false;
-						$scriptProperty = "";
-						break;
+						$log->LogMessage("Invalid command!");
+						return;
 				}
-				
 				
 				SetValue($presenceId, $presence);
 				$log->LogMessage("Updated Presence for user ".IPS_GetName($userId)." to ".$this->GetProfileValueName(IPS_GetVariable($presenceId)['VariableCustomProfile'], $presence));
@@ -110,7 +108,6 @@ class GeofenceController extends IPSModule {
 							$commonPresence = true;
 							break;
 						}
-						
 					}
 				}
 				
