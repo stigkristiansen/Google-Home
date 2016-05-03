@@ -125,7 +125,7 @@ class GeofenceController extends IPSModule {
 						$delay = (int)$_GET['delay'];
 						$log->LogMessage("Running script with delay...");
 						$scriptContent = IPS_GetScriptContent($scriptId);
-						$scriptModification = "//Do not modify this line or the line below\nIPS_SetScriptTimer(\$_IPS['SELF'],0);\n//Do not modify this line or the line above\n";
+						$scriptModification =  "//Do not modify this line or the line below\nIPS_SetScriptTimer(\$_IPS['SELF'],0);\n//Do not modify this line or the line above\n";
 						if(strripos($scriptContent, $scriptModification)===false) {
 							$splitPos = strpos($scriptContent, "?>");
 							$scriptPart1 = substr($scriptContent, 0, $splitPos);
