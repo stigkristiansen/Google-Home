@@ -17,6 +17,7 @@ class GeofenceUser extends IPSModule {
 		
 		
 		$this->RegisterVariableBoolean( "Presence", "Presence", "~Presence", false );
+		$this->EnableAction("Presence");
         
     }
 

@@ -26,6 +26,8 @@ class GeofenceController extends IPSModule {
 		$this->RegisterWebHook("/hook/".$ident, $id);
 		
 		$this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
+		$this->EnableAction("Presence");
+		
 		$this->CreateVariable($this->InstanceID, "Delay", "Delay", 1, "");
     }
 
