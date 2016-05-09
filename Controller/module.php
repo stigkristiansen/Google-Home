@@ -71,7 +71,7 @@ class GeofenceController extends IPSModule {
 			$userId=strtolower($_GET['id']);
 		
 		if($cmd!="" && $userId!="") {
-			$log->LogMessage("Received the command ".$cmd." for user ".$userId");
+			$log->LogMessage("Received the command ".$cmd." for user ".$userId);
 			
 			$children = IPS_GetChildrenIDs($this->InstanceID);
 			
