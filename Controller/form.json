@@ -1,8 +1,10 @@
 {
     "elements":
     [
+		{"type": "Label", "label": "Web Page Authentication" },
 		{ "name": "Username", "type": "ValidationTextBox", "caption": "Username:" },
 		{ "name": "Password", "type": "PasswordTextBox", "caption": "Password:" },
+		{"type": "Label", "label": "Scripts" },
 		{ "type": "SelectScript", "name": "ArrivalScript1", "caption": "Arrival script #1:" },
 		{ "type": "SelectScript", "name": "ArrivalScript2", "caption": "Arrival script #2:" },
 		{ "type": "SelectScript", "name": "DepartureScript1", "caption": "Departure script #1:" },
