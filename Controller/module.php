@@ -129,7 +129,7 @@ class GeofenceController extends IPSModule {
 				$log->LogMessage("Updated Common Presence to ".$this->GetProfileValueName(IPS_GetVariable($commonPresenceId)['VariableCustomProfile'], $commonPresence));
 				
 				$scriptId = $this->ReadPropertyInteger($scriptProperty);
-				$log->LogMessage("The script id is ".$scriptId);
+				$log->LogMessage($scriptId>0?"The script id is ".$scriptId:"No script is selected for the command");
 				if($scriptId>0) {
 					if(array_key_exists('delay', $_GET) && is_numeric($_GET['delay'])) {
 						$delay = (int)$_GET['delay'];
