@@ -52,6 +52,13 @@ class GeofenceController extends IPSModule {
 		
 		$log->LogMessage("You are authenticated!");
 		
+		if(!$this->Lock("HandleWebData")) {
+			$log->LogMessage("Waiting for unlock timed out!");
+			return;
+		}
+		
+		$log->LogMessage("The controller is locked");
+		
 		$cmd="";
 		$userId="";
 		
@@ -94,6 +101,7 @@ class GeofenceController extends IPSModule {
 						break;
 					default:
 						$log->LogMessage("Invalid command!");
+						$this->Unlock("HandleWebData");
 						return;
 				}
 				
@@ -146,6 +154,8 @@ class GeofenceController extends IPSModule {
 			
 		} else
 			$log->LogMessage("Invalid or missing \"id\" or \"cmd\" in URL");
+		
+		$this->Unlock("HandleWebData");
     }
 	
 	public function UnregisterUser($Username) {
@@ -242,6 +252,31 @@ class GeofenceController extends IPSModule {
 		
 		return $id;
 	}
+	
+	private function Lock($Ident)   {
+        $log = new Logging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
+		for ($i = 0; $i < 100; $i++)
+        {
+            if (IPS_SemaphoreEnter("GEO_" . (string) $this->InstanceID . (string) $Ident, 1))
+            {
+                return true;
+            }
+            else
+            {
+  				if($i==0)
+					$log->LogMessage("Waiting for controller to unlock...");
+				IPS_Sleep(mt_rand(1, 5));
+            }
+        }
+        return false;
+    }
+
+    private function Unlock($Ident)
+    {
+        IPS_SemaphoreLeave("GEO_" . (string) $this->InstanceID . (string) $Ident);
+		$log = new Logging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
+		$log->LogMessage("The controller is unlocked");
+    }
 		
 }
 
