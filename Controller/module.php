@@ -110,7 +110,7 @@ class GeofenceController extends IPSModule {
 				}
 				
 				SetValue($presenceId, $presence);
-				$log->LogMessage("Updated Presence for user ".IPS_GetName($userId)." to ".$this->GetProfileValueName(IPS_GetVariable($presenceId)['VariableCustomProfile'], $presence));
+				$log->LogMessage("Updated Presence for user ".IPS_GetName($userId)." to \"".$this->GetProfileValueName(IPS_GetVariable($presenceId)['VariableCustomProfile'], $presence)."\"");
 				
 				$commonPresence = false;
 				$users=IPS_GetInstanceListByModuleID("{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}");
@@ -128,14 +128,14 @@ class GeofenceController extends IPSModule {
 				
 				$commonPresenceId = $this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
 				SetValue($commonPresenceId, $commonPresence);
-				$log->LogMessage("Updated Common Presence to ".$this->GetProfileValueName(IPS_GetVariable($commonPresenceId)['VariableCustomProfile'], $commonPresence));
+				$log->LogMessage("Updated Common Presence to \"".$this->GetProfileValueName(IPS_GetVariable($commonPresenceId)['VariableCustomProfile'], $commonPresence)."\"");
 				
 				$scriptId = $this->ReadPropertyInteger($scriptProperty);
 				$log->LogMessage($scriptId>0?"The script id is ".$scriptId:"No script is selected for the command");
 				if($scriptId>0) {
 					if(array_key_exists('delay', $_GET) && is_numeric($_GET['delay'])) {
 						$delay = (int)$_GET['delay'];
-						$log->LogMessage("Running script with delay...");
+						$log->LogMessage("Running script with ".$delay." seconds delay...");
 						$scriptContent = IPS_GetScriptContent($scriptId);
 						$scriptModification =  "//Do not modify this line or the line below\nIPS_SetScriptTimer(\$_IPS['SELF'],0);\n//Do not modify this line or the line above\n";
 						if(strripos($scriptContent, $scriptModification)===false) {
@@ -257,17 +257,15 @@ class GeofenceController extends IPSModule {
 		return $id;
 	}
 	
-	private function Lock($Ident)   {
+	private function Lock($Ident) {
         $log = new Logging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
-		for ($i = 0; $i < 100; $i++)
+		for ($x=0;$x<100;$x++)
         {
-            if (IPS_SemaphoreEnter("GEO_" . (string) $this->InstanceID . (string) $Ident, 1))
-            {
+            if (IPS_SemaphoreEnter("GEO_".(string)$this->InstanceID.(string)$Ident, 1)){
                 return true;
             }
-            else
-            {
-  				if($i==0)
+            else {
+  				if($x==0)
 					$log->LogMessage("Waiting for controller to unlock...");
 				IPS_Sleep(mt_rand(1, 5));
             }
@@ -275,9 +273,8 @@ class GeofenceController extends IPSModule {
         return false;
     }
 
-    private function Unlock($Ident)
-    {
-        IPS_SemaphoreLeave("GEO_" . (string) $this->InstanceID . (string) $Ident);
+    private function Unlock($Ident) {
+        IPS_SemaphoreLeave("GEO_".(string)$this->InstanceID.(string)$Ident);
 		$log = new Logging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
 		$log->LogMessage("The controller is unlocked");
     }
