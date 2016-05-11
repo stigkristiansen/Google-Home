@@ -6,13 +6,13 @@
 		{ "name": "Password", "type": "PasswordTextBox", "caption": "Password:" },
 		{"type": "Label", "label": "Scripts" },
 		{ "type": "SelectScript", "name": "ArrivalScript1", "caption": "Arrival script #1:" },
-		{ "type": "CheckBox", "name": "ArrivalScript1Update", "caption": "Update presence (Arrival 1):" },
+		{ "type": "CheckBox", "name": "ArrivalScript1Update", "caption": "Update presence (Arrival #1)" },
 		{ "type": "SelectScript", "name": "ArrivalScript2", "caption": "Arrival script #2:" },
-		{ "type": "CheckBox", "name": "ArrivalScript2Update", "caption": "Update presence (Arrival 2):" },
+		{ "type": "CheckBox", "name": "ArrivalScript2Update", "caption": "Update presence (Arrival #2)" },
 		{ "type": "SelectScript", "name": "DepartureScript1", "caption": "Departure script #1:" },
-		{ "type": "CheckBox", "name": "DepartureScript1Update", "caption": "Update presence (Departure 1):" },
+		{ "type": "CheckBox", "name": "DepartureScript1Update", "caption": "Update presence (Departure #1)" },
 		{ "type": "SelectScript", "name": "DepartureScript2", "caption": "Departure script #2:" },
-		{ "type": "CheckBox", "name": "DepartureScript2Update", "caption": "Update presence (Departure 2):" },
+		{ "type": "CheckBox", "name": "DepartureScript2Update", "caption": "Update presence (Departure #2):" },
 		{ "type": "CheckBox", "name": "Log", "caption": "Enable logging:" }
     ],
 
