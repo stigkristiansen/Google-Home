@@ -113,26 +113,29 @@ class GeofenceController extends IPSModule {
 						return;
 				}
 				
-				SetValue($presenceId, $presence);
-				$log->LogMessage("Updated Presence for user ".IPS_GetName($userId)." to \"".$this->GetProfileValueName(IPS_GetVariable($presenceId)['VariableCustomProfile'], $presence)."\"");
-				
-				$commonPresence = false;
-				$users=IPS_GetInstanceListByModuleID("{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}");
-				$size=sizeof($users);
-				for($x=0;$x<$size;$x++){
-					if(IPS_GetParent($users[$x])==$this->InstanceID) {
-						$presenceId=$this->CreateVariable($users[$x], "Presence", "Presence", 0, "~Presence");
-						
-						if(GetValue($presenceId)) {
-							$commonPresence = true;
-							break;
+				if($this->ReadPropertyBoolean($scriptProperty."Update")) {
+					SetValue($presenceId, $presence);
+					$log->LogMessage("Updated Presence for user ".IPS_GetName($userId)." to \"".$this->GetProfileValueName(IPS_GetVariable($presenceId)['VariableCustomProfile'], $presence)."\"");
+					
+					$commonPresence = false;
+					$users=IPS_GetInstanceListByModuleID("{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}");
+					$size=sizeof($users);
+					for($x=0;$x<$size;$x++){
+						if(IPS_GetParent($users[$x])==$this->InstanceID) {
+							$presenceId=$this->CreateVariable($users[$x], "Presence", "Presence", 0, "~Presence");
+							
+							if(GetValue($presenceId)) {
+								$commonPresence = true;
+								break;
+							}
 						}
 					}
-				}
+					
+					$commonPresenceId = $this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
+					SetValue($commonPresenceId, $commonPresence);
+					$log->LogMessage("Updated Common Presence to \"".$this->GetProfileValueName(IPS_GetVariable($commonPresenceId)['VariableCustomProfile'], $commonPresence)."\"");
 				
-				$commonPresenceId = $this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
-				SetValue($commonPresenceId, $commonPresence);
-				$log->LogMessage("Updated Common Presence to \"".$this->GetProfileValueName(IPS_GetVariable($commonPresenceId)['VariableCustomProfile'], $commonPresence)."\"");
+				}
 				
 				$scriptId = $this->ReadPropertyInteger($scriptProperty);
 				$log->LogMessage($scriptId>0?"The script id is ".$scriptId:"No script is selected for the command");
