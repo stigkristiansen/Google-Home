@@ -15,6 +15,10 @@ class GeofenceController extends IPSModule {
 		$this->RegisterPropertyInteger("ArrivalScript2", 0);
 		$this->RegisterPropertyInteger("DepartureScript1", 0);
 		$this->RegisterPropertyInteger("DepartureScript2", 0);
+		$this->RegisterPropertyBoolean("ArrivalScript1Update", false);
+		$this->RegisterPropertyBoolean("ArrivalScript2Update", false);
+		$this->RegisterPropertyBoolean("DepartureScript1Update", false);
+		$this->RegisterPropertyBoolean("DepartureScript2Update", false);
 	}
 
     public function ApplyChanges(){
