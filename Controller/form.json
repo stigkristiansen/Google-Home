@@ -1,7 +1,7 @@
 {
     "elements":
     [
-		{ "type": "Label", "label": "Web Page Authentication" },
+		{ "type": "Label", "label": "Web Authentication" },
 		{ "name": "Username", "type": "ValidationTextBox", "caption": "Username:" },
 		{ "name": "Password", "type": "PasswordTextBox", "caption": "Password:" },
 		{ "type": "Label", "label": "Scripts" },
