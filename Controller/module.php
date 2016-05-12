@@ -53,10 +53,13 @@ class GeofenceController extends IPSModule {
 				echo "Authorization required to access Symcon and Geofence";
 				$log->LogMessage("Authentication needed or invalid username/password!");
 				return;
-			}
-		}
+			} else
+				$log->LogMessage("You are authenticated!");
+		} else
+			$log->LogMessage("No authentication needed");
 		
-		$log->LogMessage("You are authenticated!");
+		$username="";
+		$password="";
 		
 		if(!$this->Lock("HandleWebData")) {
 			$log->LogMessage("Waiting for unlock timed out!");
