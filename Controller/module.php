@@ -142,7 +142,7 @@ class GeofenceController extends IPSModule {
 					$log->LogMessage("Presence update is not enabled for this command.");
 				
 				$scriptId = $this->ReadPropertyInteger($scriptProperty);
-				$log->LogMessage($scriptId>0?"The script id is ".$scriptId:"No script is selected for the command");
+				$log->LogMessage($scriptId>0?"The script id is ".$scriptId:"No script is selected for this command");
 				if($scriptId>0) {
 					if(array_key_exists('delay', $_GET) && is_numeric($_GET['delay'])) {
 						$delay = (int)$_GET['delay'];
