@@ -138,7 +138,8 @@ class GeofenceController extends IPSModule {
 					SetValue($commonPresenceId, $commonPresence);
 					$log->LogMessage("Updated Common Presence to \"".$this->GetProfileValueName(IPS_GetVariable($commonPresenceId)['VariableCustomProfile'], $commonPresence)."\"");
 				
-				}
+				} else
+					$log->LogMessage("Presence update is not enabled for this command.");
 				
 				$scriptId = $this->ReadPropertyInteger($scriptProperty);
 				$log->LogMessage($scriptId>0?"The script id is ".$scriptId:"No script is selected for the command");
