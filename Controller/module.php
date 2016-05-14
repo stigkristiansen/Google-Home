@@ -92,7 +92,7 @@ class GeofenceController extends IPSModule {
 			}
 			
 			if($userExists) {
-				$presenceId = $this->CreateVariable($userId, "Presence", "Presence", 0, "~Presence");
+				
 				switch($cmd) {
 					case "arrival1":
 						$presence = true;
@@ -116,54 +116,60 @@ class GeofenceController extends IPSModule {
 						return;
 				}
 				
+				$presenceId = $this->CreateVariable($userId, "Presence", "Presence", 0, "~Presence");
+				$commonPresenceId = $this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
+				$lastCommonPresence=GetValue($commonPresenceId);
+				
+				$commonPresence = false;
+				$users=IPS_GetInstanceListByModuleID("{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}");
+				$size=sizeof($users);
+				for($x=0;$x<$size;$x++){
+					if(IPS_GetParent($users[$x])==$this->InstanceID) {
+						$presenceId=$this->CreateVariable($users[$x], "Presence", "Presence", 0, "~Presence");
+						
+						if(GetValue($presenceId)) {
+							$commonPresence = true;
+							break;
+						}
+					}
+				}
+
 				if($this->ReadPropertyBoolean($scriptProperty."Update")) {
 					SetValue($presenceId, $presence);
 					$log->LogMessage("Updated Presence for user ".IPS_GetName($userId)." to \"".$this->GetProfileValueName(IPS_GetVariable($presenceId)['VariableCustomProfile'], $presence)."\"");
-					
-					$commonPresence = false;
-					$users=IPS_GetInstanceListByModuleID("{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}");
-					$size=sizeof($users);
-					for($x=0;$x<$size;$x++){
-						if(IPS_GetParent($users[$x])==$this->InstanceID) {
-							$presenceId=$this->CreateVariable($users[$x], "Presence", "Presence", 0, "~Presence");
-							
-							if(GetValue($presenceId)) {
-								$commonPresence = true;
-								break;
-							}
-						}
-					}
-					
-					$commonPresenceId = $this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
+
 					SetValue($commonPresenceId, $commonPresence);
 					$log->LogMessage("Updated Common Presence to \"".$this->GetProfileValueName(IPS_GetVariable($commonPresenceId)['VariableCustomProfile'], $commonPresence)."\"");
-				
 				} else
 					$log->LogMessage("Presence update is not enabled for this command.");
 				
 				$scriptId = $this->ReadPropertyInteger($scriptProperty);
-				$log->LogMessage($scriptId>0?"The script id is ".$scriptId:"No script is selected for this command");
-				if($scriptId>0) {
-					if(array_key_exists('delay', $_GET) && is_numeric($_GET['delay'])) {
-						$delay = (int)$_GET['delay'];
-						$log->LogMessage("Running script with ".$delay." seconds delay...");
-						$scriptContent = IPS_GetScriptContent($scriptId);
-						$scriptModification =  "//Do not modify this line or the line below\nIPS_SetScriptTimer(\$_IPS['SELF'],0);\n//Do not modify this line or the line above\n";
-						if(strripos($scriptContent, $scriptModification)===false) {
-							$splitPos = strpos($scriptContent, "?>");
-							$scriptPart1 = substr($scriptContent, 0, $splitPos);
-							$scriptPart2 = substr($scriptContent, $splitPos);
-							$scriptContent = $scriptPart1.$scriptModification.$scriptPart2;
-							IPS_SetScriptContent($scriptId, $scriptContent);
+				$log->LogMessage($scriptId>0?"The script is ".IPS_GetName($scriptId):"No script is selected for this command");
+				if($scriptId>0 &&($presence != $lastCommonPresence)) {
+					if($presence || !$commonPresence)
+						if(array_key_exists('delay', $_GET) && is_numeric($_GET['delay'])) {
+							$delay = (int)$_GET['delay'];
+							$log->LogMessage("Running script with ".$delay." seconds delay...");
+							$scriptContent = IPS_GetScriptContent($scriptId);
+							$scriptModification =  "//Do not modify this line or the line below\nIPS_SetScriptTimer(\$_IPS['SELF'],0);\n//Do not modify this line or the line above\n";
+							if(strripos($scriptContent, $scriptModification)===false) {
+								$splitPos = strpos($scriptContent, "?>");
+								$scriptPart1 = substr($scriptContent, 0, $splitPos);
+								$scriptPart2 = substr($scriptContent, $splitPos);
+								$scriptContent = $scriptPart1.$scriptModification.$scriptPart2;
+								IPS_SetScriptContent($scriptId, $scriptContent);
+							}
+							IPS_SetScriptTimer($scriptId, $delay);
+						} else {
+							$log->LogMessage("Running script...");
+							IPS_RunScript($scriptId);
 						}
-						IPS_SetScriptTimer($scriptId, $delay);
-					} else {
-						$log->LogMessage("Running script...");
-						IPS_RunScript($scriptId);
 					}
-				}
+				} else
+					LogMessage("Old Presence and new Presence is equal. Skipping running script")				
 				
 				echo "OK";
+			
 			} else
 				$log->LogMessage("Unknown user");
 			
