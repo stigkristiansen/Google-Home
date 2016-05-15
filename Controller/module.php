@@ -133,7 +133,7 @@ class GeofenceController extends IPSModule {
 					}
 				}
 				
-				$updatePresence = $this->ReadPropertyBoolean($scriptProperty."Update")
+				$updatePresence = $this->ReadPropertyBoolean($scriptProperty."Update");
 				if($updatePresence) {
 					SetValue($presenceId, $presence);
 					$log->LogMessage("Updated Presence for user ".IPS_GetName($userId)." to \"".$this->GetProfileValueName(IPS_GetVariable($presenceId)['VariableCustomProfile'], $presence)."\"");
