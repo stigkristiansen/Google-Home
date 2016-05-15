@@ -119,6 +119,9 @@ class GeofenceController extends IPSModule {
 				$commonPresenceId = $this->CreateVariable($this->InstanceID, "Presence", "Presence", 0, "~Presence");
 				$lastCommonPresence=GetValue($commonPresenceId);
 				
+				if($updatePresence)
+					SetValue($presenceId, $presence);
+				
 				$commonPresence = false;
 				$users=IPS_GetInstanceListByModuleID("{C4A1F68D-A34E-4A3A-A5EC-DCBC73532E2C}");
 				$size=sizeof($users);
@@ -135,9 +138,7 @@ class GeofenceController extends IPSModule {
 				
 				$updatePresence = $this->ReadPropertyBoolean($scriptProperty."Update");
 				if($updatePresence) {
-					SetValue($presenceId, $presence);
 					$log->LogMessage("Updated Presence for user ".IPS_GetName($userId)." to \"".$this->GetProfileValueName(IPS_GetVariable($presenceId)['VariableCustomProfile'], $presence)."\"");
-
 					SetValue($commonPresenceId, $commonPresence);
 					$log->LogMessage("Updated Common Presence to \"".$this->GetProfileValueName(IPS_GetVariable($commonPresenceId)['VariableCustomProfile'], $commonPresence)."\"");
 				} else
