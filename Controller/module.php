@@ -147,7 +147,7 @@ class GeofenceController extends IPSModule {
 				
 				if($scriptId>0) { 
 					$log->LogMessage("The script is ".IPS_GetName($scriptId));
-					if(!$updatePresence || $presence!=$lastCommonPresence)) {					
+					if(!$updatePresence || $presence!=$lastCommonPresence) {					
 						if(!updatePresence || $presence || !$commonPresence) {
 							if(array_key_exists('delay', $_GET) && is_numeric($_GET['delay'])) {
 								$delay = (int)$_GET['delay'];
