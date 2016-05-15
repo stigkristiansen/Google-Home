@@ -131,7 +131,7 @@ class GeofenceController extends IPSModule {
 				for($x=0;$x<$size;$x++){
 					if(IPS_GetParent($users[$x])==$this->InstanceID) {
 						$presenceId=$this->CreateVariable($users[$x], "Presence", "Presence", 0, "~Presence");
-						$log->LogMessage("Checking ".IPS_GetName($users[$x]));
+						//$log->LogMessage("Checking ".IPS_GetName($users[$x]));
 						if(GetValue($presenceId)) {
 							$commonPresence = true;
 							break;
