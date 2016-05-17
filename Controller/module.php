@@ -139,7 +139,6 @@ class GeofenceController extends IPSModule {
 					}
 				}
 				
-				
 				if($updatePresence) {
 					SetValue($commonPresenceId, $commonPresence);
 					$log->LogMessage("Updated Common Presence to \"".$this->GetProfileValueName(IPS_GetVariable($commonPresenceId)['VariableCustomProfile'], $commonPresence)."\"");
@@ -154,17 +153,22 @@ class GeofenceController extends IPSModule {
 						if(!$updatePresence || $presence || !$commonPresence) {
 							if(array_key_exists('delay', $_GET) && is_numeric($_GET['delay'])) {
 								$delay = (int)$_GET['delay'];
-								$log->LogMessage("Running script with ".$delay." seconds delay...");
-								$scriptContent = IPS_GetScriptContent($scriptId);
-								$scriptModification =  "//Do not modify this line or the line below\nIPS_SetScriptTimer(\$_IPS['SELF'],0);\n//Do not modify this line or the line above\n";
-								if(strripos($scriptContent, $scriptModification)===false) {
-									$splitPos = strpos($scriptContent, "?>");
-									$scriptPart1 = substr($scriptContent, 0, $splitPos);
-									$scriptPart2 = substr($scriptContent, $splitPos);
-									$scriptContent = $scriptPart1.$scriptModification.$scriptPart2;
-									IPS_SetScriptContent($scriptId, $scriptContent);
+								if($delay>0) {
+									$log->LogMessage("Running script with ".$delay." seconds delay...");
+									$scriptContent = IPS_GetScriptContent($scriptId);
+									$scriptModification =  "//Do not modify this line or the line below\nIPS_SetScriptTimer(\$_IPS['SELF'],0);\n//Do not modify this line or the line above\n";
+									if(strripos($scriptContent, $scriptModification)===false) {
+										$splitPos = strpos($scriptContent, "?>");
+										$scriptPart1 = substr($scriptContent, 0, $splitPos);
+										$scriptPart2 = substr($scriptContent, $splitPos);
+										$scriptContent = $scriptPart1.$scriptModification.$scriptPart2;
+										IPS_SetScriptContent($scriptId, $scriptContent);
+									}
+									IPS_SetScriptTimer($scriptId, $delay);
+								} else {
+									$log->LogMessage("Running script...");
+									IPS_RunScript($scriptId);
 								}
-								IPS_SetScriptTimer($scriptId, $delay);
 							} else {
 								$log->LogMessage("Running script...");
 								IPS_RunScript($scriptId);
