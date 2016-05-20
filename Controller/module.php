@@ -155,14 +155,8 @@ class GeofenceController extends IPSModule {
 						$message = "Old Presence and new Presence is equal. Skipping script";
 					}
 									
-									
-					$log->LogMessage("updatePrecense: ".$updatePresence);				
-					$log->LogMessage("presence: ".$presence);				
-					$log->LogMessage("commonPrecense: ".$commonPresence);
-					
-					
 					if($updatePresence && !$presence && $commonPresence) {
-						$runscript = false;
+						$runScript = false;
 						$message="Not all users have sent a departure command. Skipping script";
 					}
 					
