@@ -146,37 +146,45 @@ class GeofenceController extends IPSModule {
 					$log->LogMessage("Presence update is not enabled for this command.");
 				
 				$scriptId = $this->ReadPropertyInteger($scriptProperty);
-				
 				if($scriptId>0) { 
 					$log->LogMessage("The script is ".IPS_GetName($scriptId));
-					if(!$updatePresence || $presence!=$lastCommonPresence) {					
-						if(!$updatePresence || $presence || !$commonPresence) {
-							if(array_key_exists('delay', $_GET) && is_numeric($_GET['delay'])) {
-								$delay = (int)$_GET['delay'];
-								if($delay>0) {
-									$log->LogMessage("Running script with ".$delay." seconds delay...");
-									$scriptContent = IPS_GetScriptContent($scriptId);
-									$scriptModification =  "//Do not modify this line or the line below\nIPS_SetScriptTimer(\$_IPS['SELF'],0);\n//Do not modify this line or the line above\n";
-									if(strripos($scriptContent, $scriptModification)===false) {
-										$splitPos = strpos($scriptContent, "?>");
-										$scriptPart1 = substr($scriptContent, 0, $splitPos);
-										$scriptPart2 = substr($scriptContent, $splitPos);
-										$scriptContent = $scriptPart1.$scriptModification.$scriptPart2;
-										IPS_SetScriptContent($scriptId, $scriptContent);
-									}
-									IPS_SetScriptTimer($scriptId, $delay);
-								} else {
-									$log->LogMessage("Running script...");
-									IPS_RunScript($scriptId);
+					
+					$runScript = true;
+					if($updatePresence && $presence==$lastCommonPresence) {
+						$runScript = false;
+						$message = "Old Presence and new Presence is equal. Skipping script";
+					}
+									
+					if($updatePresence && $presence!=commonPresence) {
+						$runscript = false;
+						$message="Not all users have sent a departure command. Skipping script";
+					}
+					
+					if($runScript) {					
+						if(array_key_exists('delay', $_GET) && is_numeric($_GET['delay'])) {
+							$delay = (int)$_GET['delay'];
+							if($delay>0) {
+								$log->LogMessage("Running script with ".$delay." seconds delay...");
+								$scriptContent = IPS_GetScriptContent($scriptId);
+								$scriptModification =  "//Do not modify this line or the line below\nIPS_SetScriptTimer(\$_IPS['SELF'],0);\n//Do not modify this line or the line above\n";
+								if(strripos($scriptContent, $scriptModification)===false) {
+									$splitPos = strpos($scriptContent, "?>");
+									$scriptPart1 = substr($scriptContent, 0, $splitPos);
+									$scriptPart2 = substr($scriptContent, $splitPos);
+									$scriptContent = $scriptPart1.$scriptModification.$scriptPart2;
+									IPS_SetScriptContent($scriptId, $scriptContent);
 								}
+								IPS_SetScriptTimer($scriptId, $delay);
 							} else {
 								$log->LogMessage("Running script...");
 								IPS_RunScript($scriptId);
 							}
-						} else
-							$log->LogMessage("Not all users have sent a departure command. Skipping script");				
+						} else {
+							$log->LogMessage("Running script...");
+							IPS_RunScript($scriptId);
+						}
 					} else
-						$log->LogMessage("Old Presence and new Presence is equal. Skipping script");				
+						$log->LogMessage($message);				
 				} else 
 					$log->LogMessage("No script is selected for this command");
 				
