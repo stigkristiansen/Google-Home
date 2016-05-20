@@ -156,9 +156,9 @@ class GeofenceController extends IPSModule {
 					}
 									
 									
-					$log->LogMessage("updatePrecense: "$updatePresence?"true"?"false");				
-					$log->LogMessage("presence: "$presence?"true"?"false");				
-					$log->LogMessage("commonPrecense: "$commonPresence?"true"?"false");
+					$log->LogMessage("updatePrecense: ".$updatePresence?"true"?"false");				
+					$log->LogMessage("presence: ".$presence?"true"?"false");				
+					$log->LogMessage("commonPrecense: ".$commonPresence?"true"?"false");
 					
 					
 					if($updatePresence && !$presence && $commonPresence) {
