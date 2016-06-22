@@ -36,10 +36,14 @@ class GeofenceController extends IPSModule {
     }
 
     public function HandleWebData() {
+		IPS_LogMessage("Debug", "Inside HandleWebData");
+		
 		$log = new Logging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
 		
 		$username = IPS_GetProperty($this->InstanceID, "Username");
 		$password = IPS_GetProperty($this->InstanceID, "Password");
+		
+		IPS_LogMessage("User is ".$username);
 		
 		if($username!="" || $password!="") {
 			if(!isset($_SERVER['PHP_AUTH_USER']))
