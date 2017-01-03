@@ -1,7 +1,7 @@
 {
     "elements":
     [
-        { "type": "Select", "name": "port", "caption": "Switch Type",
+        { "type": "Select", "name": "switchtype", "caption": "Switch Type",
             "options": [
                 { "label": "z-wave", "value": "z-wave" },
                 { "label": "xComfort", "value": "xcomfort" },
