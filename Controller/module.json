@@ -1,14 +1,14 @@
 { 
-    "id" :  "{C5271BF2-DDC9-4EA7-8467-A8C645500263}" , 
-    "name" :  "GeofenceController" , 
+    "id" :  "{11B64703-256F-4E7F-8DD5-960D6A6C0DBB}" , 
+    "name" :  "GoogleHomeController" , 
     "type" :  3 , 
-    "vendor" :  "Geofence" , 
+    "vendor" :  "Stig Kristiansen" , 
     "aliases" : 
     [ 
-        "Geofence Controller"  
+        "Google Home Controller"  
     ] ,   
     "parentRequirements" :  [] , 
     "childRequirements" :  [] , 
     "implemented" :  [] , 
-    "prefix" :  "GEO" 
+    "prefix" :  "GH" 
 }
