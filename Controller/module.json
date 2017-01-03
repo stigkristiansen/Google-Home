@@ -8,7 +8,7 @@
         "Google Home Controller"  
     ] ,   
     "parentRequirements" :  [] , 
-    "childRequirements" :  [] , 
-    "implemented" :  [] , 
-    "prefix" :  "GH" 
+    "childRequirements" :  ["{11ACFC89-5700-4B2A-A93C-18CAB413839C}"] , 
+    "implemented" :  ["{8A83D53D-934E-4DD7-8054-A794D0723FED}"] , 
+    "prefix" :  "GHC" 
 }

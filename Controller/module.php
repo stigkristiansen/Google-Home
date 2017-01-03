@@ -45,7 +45,7 @@ class GoogleHomeController extends IPSModule {
 			if(($_SERVER['PHP_AUTH_USER'] != $username) || ($_SERVER['PHP_AUTH_PW'] != $password)) {
 				header('WWW-Authenticate: Basic Realm="IP-Symcon"');
 				header('HTTP/1.0 401 Unauthorized');
-				echo "Authorization required to access Symcon and Geofence";
+				echo "Authorization required to access Symcon Google Home Module";
 				$log->LogMessage("Authentication needed or invalid username/password!");
 				return;
 			} else
@@ -63,7 +63,16 @@ class GoogleHomeController extends IPSModule {
 		
 		$log->LogMessage("The controller is locked");
 		
+		$jsonRequest    = file_get_contents('php://input');
+		$data           = json_decode($jsonRequest, true);
 		
+		$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => $data)));
+
+		header('Content-type: application/json');
+		$response =  '{ "speech": "The lightning was changed", "DisplayText": "The lightning was changed", "Source": "IP-Symcon"}';
+
+		echo $response;
+
 				
 		$this->Unlock("HandleWebData");
     }
