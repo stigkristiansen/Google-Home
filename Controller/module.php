@@ -64,6 +64,8 @@ class GoogleHomeController extends IPSModule {
 		$log->LogMessage("The controller is locked");
 		
 		$jsonRequest    = file_get_contents('php://input');
+		IPS_LogMessage("Controller", $jsonRequest);
+
 		$data           = json_decode($jsonRequest, true);
 		
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => $jsonRequest)));
