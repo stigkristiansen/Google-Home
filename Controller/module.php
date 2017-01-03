@@ -67,8 +67,16 @@ class GoogleHomeController extends IPSModule {
 		IPS_LogMessage("Controller", $jsonRequest);
 
 		$data           = json_decode($jsonRequest, true);
-		
-		$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => "Test")));
+
+
+		try{		
+
+			$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => "Test")));
+
+		} catch (Exeption $ex) {
+
+			IPS_LogMessage("Controller","Error");
+		}
 
 		header('Content-type: application/json');
 		$response =  '{ "speech": "The lightning was changed", "DisplayText": "The lightning was changed", "Source": "IP-Symcon"}';
