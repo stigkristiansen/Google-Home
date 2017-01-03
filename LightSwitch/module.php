@@ -23,9 +23,10 @@ class GoogleHomeLightSwitch extends IPSModule {
     }
 
     public function ReceiveData($JSONString) {
+		IPS_LogMessage("Test","ReceiveData!");
 		$log = new Logging($this->ReadPropertyBoolean("log"), IPS_Getname($this->InstanceID));
 		$data = json_decode($JSONString);
-		$log->LogMessage("Got data: ".$data);
+		$log->LogMessage("Got data: ".$JSONString);
 
     }
 
