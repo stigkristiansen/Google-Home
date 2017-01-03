@@ -1,0 +1,14 @@
+{ 
+    "id" :  "{9ED94E84-38E9-4419-98D6-DC978FED1B3F}" , 
+    "name" :  "GoogleHomeLightSwitch" , 
+    "type" :  3 , 
+    "vendor" :  "Stig Kristiansen" , 
+    "aliases" : 
+    [ 
+        "Google Home Light Switch"  
+    ] ,   
+    "parentRequirements" :  [] , 
+    "childRequirements" :  [] , 
+    "implemented" :  [] , 
+    "prefix" :  "GHLS" 
+}
