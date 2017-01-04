@@ -33,11 +33,11 @@ class GoogleHomeController extends IPSModule {
 		$response = json_decode($JSONString, true)['Buffer']; 
 		
 		//'{ "speech": "The lightning was changed", "DisplayText": "The lightning was changed", "Source": "IP-Symcon"}';
-		
+		$this->SetBuffer('response', '{ "speech": "The lightning was changed", "DisplayText": "The lightning was changed", "Source": "IP-Symcon"}');
 		//header('Content-type: application/json');
 		//echo $response;
 		
-		$log->LogMessage("Sendt response back to Google");
+		//$log->LogMessage("Sendt response back to Google");
 	}
 	
     public function HandleWebData() {
@@ -82,20 +82,18 @@ class GoogleHomeController extends IPSModule {
 
 		$data           = json_decode($jsonRequest, true);
 
-
-		try{		
-
-			$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => $jsonRequest)));
-			//$this->SendDataToChildren($jsonRequest);
-
-		} catch (Exeption $ex) {
-
-			IPS_LogMessage("Controller","Error");
-		}
-
 		
+		$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => $jsonRequest)));
 
+		IPS_Sleep (3000);
+		
+		$response = $this->GetBuffer('response');
+
+		header('Content-type: application/json');
+		echo $response;
 				
+		$log->LogMessage("Sendt response back to Google");
+
 		//$this->Unlock("HandleWebData");
     }
 	
