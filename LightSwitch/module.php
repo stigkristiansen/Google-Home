@@ -39,7 +39,7 @@ class GoogleHomeLightSwitch extends IPSModule {
 		
 		$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
 		
-		$log->LogMessage("Sendt response back to parent: ".$result);
+		$log->LogMessage("Sendt response back to parent");
 
     }
 
