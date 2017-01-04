@@ -97,15 +97,7 @@ class GoogleHomeController extends IPSModule {
 		$response = GetBuffer('response');	
 		
 		$log->LogMessage("After waiting for 3 sec: ".$response);
-		
-		/*
-		if(strlen($response)==0) {
-			$log->LogMessage("Did not receive message from child to send back to Google in time");
-			//$this->Unlock("HandleWebData");
-			return;		
-		}
-		*/
-		
+						
 		header('Content-type: application/json');
 		echo $response;
 				
