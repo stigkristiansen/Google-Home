@@ -1,7 +1,7 @@
 { 
     "id" :  "{11B64703-256F-4E7F-8DD5-960D6A6C0DBB}" , 
     "name" :  "GoogleHomeController" , 
-    "type" :  3 , 
+    "type" :  2 , 
     "vendor" :  "Stig Kristiansen" , 
     "aliases" : 
     [ 

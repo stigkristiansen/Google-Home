@@ -9,8 +9,8 @@ class GoogleHomeController extends IPSModule {
         
         $this->RegisterPropertyBoolean ("Log", false );
 
-	$this->RegisterPropertyString("Username", "");
-	$this->RegisterPropertyString("Password", "");
+		$this->RegisterPropertyString("Username", "");
+		$this->RegisterPropertyString("Password", "");
 
    }
 
@@ -70,13 +70,13 @@ class GoogleHomeController extends IPSModule {
 		$username="";
 		$password="";
 		
-		if(!$this->Lock("HandleWebData")) {
+		/*if(!$this->Lock("HandleWebData")) {
 			$log->LogMessage("Waiting for unlock timed out!");
 			return;
 		}
 		
 		$log->LogMessage("The controller is locked");
-		
+		*/
 		$jsonRequest    = file_get_contents('php://input');
 		IPS_LogMessage("Controller", $jsonRequest);
 
@@ -96,7 +96,7 @@ class GoogleHomeController extends IPSModule {
 		
 
 				
-		$this->Unlock("HandleWebData");
+		//$this->Unlock("HandleWebData");
     }
 	
 	
