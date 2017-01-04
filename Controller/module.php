@@ -90,7 +90,10 @@ class GoogleHomeController extends IPSModule {
 			*/
 
 		IPS_Sleep(3000);
+		
 		$response = GetBuffer('response');	
+		
+		$log->LogMessage("After waiting for 3 sec: ".$response);
 		
 		/*
 		if(strlen($response)==0) {
