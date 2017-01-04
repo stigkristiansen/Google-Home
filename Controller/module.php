@@ -72,7 +72,7 @@ class GoogleHomeController extends IPSModule {
 		}
 		
 		$log->LogMessage("The controller is locked");
-		*/
+		
 		$jsonRequest    = file_get_contents('php://input');
 		IPS_LogMessage("Controller", $jsonRequest);
 
@@ -89,7 +89,7 @@ class GoogleHomeController extends IPSModule {
 		}
 				
 		if(strlen($response)==0) {
-			$log->LogMessage("Did not receive message from child to send to Google in time");
+			$log->LogMessage("Did not receive message from child to send back to Google in time");
 			return;		
 		}
 		
