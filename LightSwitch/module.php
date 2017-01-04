@@ -34,7 +34,7 @@ class GoogleHomeLightSwitch extends IPSModule {
 		$value = ($valueText=="off"?false:true);
 	
 		$logMessage = "Switching light ".$valueText." in ".$room;;	
-		$log->LogMessage(logMessage);
+		$log->LogMessage($logMessage);
 
     }
 
