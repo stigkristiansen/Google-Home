@@ -27,25 +27,16 @@ class GoogleHomeController extends IPSModule {
     }
 
 	public function ForwardData($JSONString) {
-		$log = new Logging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
-		
-		$log->LogMessage("Received respnse from device");
-		
 		$response = json_decode($JSONString, true)['Buffer']; 
 			
 		$this->SetBuffer('response', $response);
-		
 	}
 	
     public function HandleWebData() {
-		//IPS_LogMessage("Debug", "Inside HandleWebData");
-		
 		$log = new Logging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
 		
 		$username = IPS_GetProperty($this->InstanceID, "Username");
 		$password = IPS_GetProperty($this->InstanceID, "Password");
-		
-		//IPS_LogMessage("User is ".$username);
 		
 		if($username!="" || $password!="") {
 			if(!isset($_SERVER['PHP_AUTH_USER']))
@@ -56,7 +47,7 @@ class GoogleHomeController extends IPSModule {
 			if(($_SERVER['PHP_AUTH_USER'] != $username) || ($_SERVER['PHP_AUTH_PW'] != $password)) {
 				header('WWW-Authenticate: Basic Realm="IP-Symcon"');
 				header('HTTP/1.0 401 Unauthorized');
-				echo "Authorization required to access Symcon Google Home Module";
+				echo "Authorization required to access IP-Symcons Google Home Module";
 				$log->LogMessage("Authentication needed or invalid username/password!");
 				return;
 			} else
@@ -76,9 +67,10 @@ class GoogleHomeController extends IPSModule {
 		$jsonRequest = file_get_contents('php://input');
 		$data = json_decode($jsonRequest, true);
 
+		$log->LogMessage("Sending command to child device");
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => $jsonRequest)));
 
-		$log->LogMessage("Waiting for response from device...");
+		$log->LogMessage("Waiting for response from child device...");
 		$response="";
 		for($x=0;$x<100;$x++) {
 			$response = $this->GetBuffer('response');
@@ -97,7 +89,7 @@ class GoogleHomeController extends IPSModule {
 		header('Content-type: application/json');
 		echo $response;
 				
-		$log->LogMessage("Sendt response back to Google");
+		$log->LogMessage("Sendt the response back to Google");
 
 		$this->Unlock("HandleWebData");
     }
