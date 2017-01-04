@@ -34,8 +34,8 @@ class GoogleHomeController extends IPSModule {
 		
 		//'{ "speech": "The lightning was changed", "DisplayText": "The lightning was changed", "Source": "IP-Symcon"}';
 		
-		header('Content-type: application/json');
-		echo $response;
+		//header('Content-type: application/json');
+		//echo $response;
 		
 		$log->LogMessage("Sendt response back to Google");
 	}
