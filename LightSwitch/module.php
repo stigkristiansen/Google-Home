@@ -24,10 +24,17 @@ class GoogleHomeLightSwitch extends IPSModule {
     }
 
     public function ReceiveData($JSONString) {
-		IPS_LogMessage("Test","ReceiveData!");
+		
 		$log = new Logging($this->ReadPropertyBoolean("log"), IPS_Getname($this->InstanceID));
-		$data = json_decode($JSONString);
-		$log->LogMessage("Got data: ".$JSONString);
+
+		$data = json_decode(json_decode($jsondata, true)['Buffer'], true);
+	
+		$room = $data['result']['parameters']['rooms'];
+		$valueText = $data['result']['parameters']['light-action-switch1']; 
+		$value = ($valueText=="off"?false:true);
+	
+		$logMessage = "Switching light ".$valueText." in ".$room;;	
+		$log->LogMessage(logMessage);
 
     }
 
