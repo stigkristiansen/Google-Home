@@ -22,8 +22,6 @@ class GoogleHomeController extends IPSModule {
 		$id = $this->RegisterScript($ident, $name, "<?\n//Do not modify!\nrequire_once(IPS_GetKernelDirEx().\"scripts/__ipsmodule.inc.php\");\nrequire_once(\"../modules/Google-Home/Controller/module.php\");\n(new GoogleHomeController(".$this->InstanceID."))->HandleWebData();\n?>");
 		$this->RegisterWebHook("/hook/googlehome", $id);
 		
-		
-		
     }
 
 	public function ForwardData($JSONString) {
@@ -80,6 +78,7 @@ class GoogleHomeController extends IPSModule {
 			IPS_Sleep(50);
 		}
 			
+				
 		if(strlen($response)==0) {
 			$log->LogMessage("Waiting for response timed out!");
 			$this->Unlock("HandleWebData");
@@ -89,7 +88,7 @@ class GoogleHomeController extends IPSModule {
 		header('Content-type: application/json');
 		echo $response;
 				
-		$log->LogMessage("Sendt the response back to Google");
+		$log->LogMessage("Received response from child device. Forwarded the response to Google");
 
 		$this->Unlock("HandleWebData");
     }
@@ -131,7 +130,7 @@ class GoogleHomeController extends IPSModule {
             else {
   				if($x==0)
 					$log->LogMessage("Waiting for controller to unlock...");
-				IPS_Sleep(mt_rand(1, 5));
+				IPS_Sleep(50);
             }
         }
         return false;
