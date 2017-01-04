@@ -70,8 +70,9 @@ class GoogleHomeController extends IPSModule {
 			$log->LogMessage("Waiting for unlock timed out!");
 			return;
 		}
-		*/
+		
 		$log->LogMessage("The controller is locked");
+		*/
 		
 		$jsonRequest = file_get_contents('php://input');
 		
@@ -89,6 +90,7 @@ class GoogleHomeController extends IPSModule {
 		}
 			*/
 
+		$log->LogMessage("Waiting for 3 sec");
 		IPS_Sleep(3000);
 		
 		$response = GetBuffer('response');	
