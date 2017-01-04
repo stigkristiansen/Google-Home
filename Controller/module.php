@@ -80,13 +80,18 @@ class GoogleHomeController extends IPSModule {
 		$this->SetBuffer('response', '');
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => $jsonRequest)));
 
+		/*$response="";
 		for($x=0;$x<100;$x++) {
 			$response = GetBuffer('response');
+			
 			if(strlen($response)> 0)
 				break;
 			IPS_Sleep(50);
 		}
-				
+			*/
+
+		IPS_Sleep(3000);
+		$response = GetBuffer('response');	
 		if(strlen($response)==0) {
 			$log->LogMessage("Did not receive message from child to send back to Google in time");
 			$this->Unlock("HandleWebData");
