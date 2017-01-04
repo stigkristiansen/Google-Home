@@ -88,7 +88,7 @@ class GoogleHomeController extends IPSModule {
 			IPS_Sleep(50);
 		}
 			
-		if(strlen($response==0) {
+		if(strlen($response)==0) {
 			$log->LogMessage("Waiting for response timed out!");
 			$this->Unlock("HandleWebData");
 			return;
