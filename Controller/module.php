@@ -28,7 +28,8 @@ class GoogleHomeController extends IPSModule {
 
 	public function ForwardData($JSONString) {
 		$log = new Logging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
-		$log->LogMessage("Received data from child:".$JSONString);
+		
+		$log->LogMessage("Received respnse from device");
 		
 		$response = json_decode($JSONString, true)['Buffer']; 
 			
@@ -66,44 +67,39 @@ class GoogleHomeController extends IPSModule {
 		$username="";
 		$password="";
 		
-		/*if(!$this->Lock("HandleWebData")) {
+		if(!$this->Lock("HandleWebData")) {
 			$log->LogMessage("Waiting for unlock timed out!");
 			return;
 		}
-		
 		$log->LogMessage("The controller is locked");
-		*/
-		
+				
 		$jsonRequest = file_get_contents('php://input');
-		
 		$data = json_decode($jsonRequest, true);
 
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => $jsonRequest)));
 
-		/*$response="";
+		$log->LogMessage("Waiting for response from device...");
+		$response="";
 		for($x=0;$x<100;$x++) {
-			$response = GetBuffer('response');
-			
-			if(strlen($response)> 0)
+			$response = $this->GetBuffer('response');
+			if(strlen($response)>0)
 				break;
+			
 			IPS_Sleep(50);
 		}
-			*/
-
-		$log->LogMessage("Waiting for 3 sec");
-		IPS_Sleep(3000);
-		$log->LogMessage("After waiting for 3 sec");
-		
-		$response = GetBuffer('response');	
-		
-		$log->LogMessage("After waiting for 3 sec: ".$response);
-						
+			
+		if(strlen($response==0) {
+			$log->LogMessage("Waiting for response timed out!");
+			$this->Unlock("HandleWebData");
+			return;
+		}
+							
 		header('Content-type: application/json');
 		echo $response;
 				
 		$log->LogMessage("Sendt response back to Google");
 
-		//$this->Unlock("HandleWebData");
+		$this->Unlock("HandleWebData");
     }
 	
 	
