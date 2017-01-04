@@ -27,13 +27,17 @@ class GoogleHomeController extends IPSModule {
     }
 
 	public function ForwardData($JSONString) {
-		header('Content-type: application/json');
-
+		$log = new Logging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
+		$log->LogMessage("Received data from child:".$JSONString);
+		
 		$response = json_decode($JSONString, true)['Buffer']; 
 		
 		//'{ "speech": "The lightning was changed", "DisplayText": "The lightning was changed", "Source": "IP-Symcon"}';
-
+		
+		header('Content-type: application/json');
 		echo $response;
+		
+		$log->LogMessage("Sendt response back to Google");
 	}
 	
     public function HandleWebData() {
