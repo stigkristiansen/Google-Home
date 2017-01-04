@@ -31,13 +31,9 @@ class GoogleHomeController extends IPSModule {
 		$log->LogMessage("Received data from child:".$JSONString);
 		
 		$response = json_decode($JSONString, true)['Buffer']; 
+			
+		$this->SetBuffer('response', $response);
 		
-		//'{ "speech": "The lightning was changed", "DisplayText": "The lightning was changed", "Source": "IP-Symcon"}';
-		$this->SetBuffer('response', '{ "speech": "The lightning was changed", "DisplayText": "The lightning was changed", "Source": "IP-Symcon"}');
-		//header('Content-type: application/json');
-		//echo $response;
-		
-		//$log->LogMessage("Sendt response back to Google");
 	}
 	
     public function HandleWebData() {
@@ -70,7 +66,7 @@ class GoogleHomeController extends IPSModule {
 		$username="";
 		$password="";
 		
-		/*if(!$this->Lock("HandleWebData")) {
+		if(!$this->Lock("HandleWebData")) {
 			$log->LogMessage("Waiting for unlock timed out!");
 			return;
 		}
@@ -82,19 +78,27 @@ class GoogleHomeController extends IPSModule {
 
 		$data           = json_decode($jsonRequest, true);
 
-		
+		$this->SetBuffer('response', '');
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => $jsonRequest)));
 
-		IPS_Sleep (3000);
+		for($x=0;$x<100;$x++) {
+			$response = GetBuffer('response');
+			if(strlen($response)> 0)
+				break;
+			IPS_Sleep(mt_rand(1, 5));
+		}
+				
+		if(strlen($response)==0) {
+			$log->LogMessage("Did not receive message from child to send to Google in time");
+			return;		
+		}
 		
-		$response = $this->GetBuffer('response');
-
 		header('Content-type: application/json');
 		echo $response;
 				
 		$log->LogMessage("Sendt response back to Google");
 
-		//$this->Unlock("HandleWebData");
+		$this->Unlock("HandleWebData");
     }
 	
 	
@@ -126,7 +130,7 @@ class GoogleHomeController extends IPSModule {
 		
 	private function Lock($Ident) {
         $log = new Logging($this->ReadPropertyBoolean("Log"), IPS_Getname($this->InstanceID));
-		for ($x=0;$x<100;$x++)
+		for ($x=0;$x<200;$x++)
         {
             if (IPS_SemaphoreEnter("GH_".(string)$this->InstanceID.(string)$Ident, 1)){
                 return true;

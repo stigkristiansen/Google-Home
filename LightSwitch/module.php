@@ -31,7 +31,7 @@ class GoogleHomeLightSwitch extends IPSModule {
 		$valueText = $data['result']['parameters']['light-action-switch1']; 
 		$value = ($valueText=="off"?false:true);
 	
-		$logMessage = "Switching light ".$valueText." in ".$room;;	
+		$logMessage = "The light was switched ".$valueText." in ".$room;;	
 		$log->LogMessage($logMessage);
 		
 		$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
