@@ -71,7 +71,8 @@ class GoogleHomeController extends IPSModule {
 
 		try{		
 
-			$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => $jsonRequest)));
+			//$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => $jsonRequest)));
+			$this->SendDataToChildren($jsonRequest);
 
 		} catch (Exeption $ex) {
 
