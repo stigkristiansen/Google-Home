@@ -35,6 +35,10 @@ class GoogleHomeLightSwitch extends IPSModule {
 	
 		$logMessage = "Switching light ".$valueText." in ".$room;;	
 		$log->LogMessage($logMessage);
+		
+		$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
+		
+		$this->SendDataToParent(json_encode(Array("DataID" => "{11B64703-256F-4E7F-8DD5-960D6A6C0DBB}", "Buffer" => $response)));
 
     }
 

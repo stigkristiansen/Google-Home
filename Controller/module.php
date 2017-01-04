@@ -26,6 +26,16 @@ class GoogleHomeController extends IPSModule {
 		
     }
 
+	public function ForwardData($JSONString) {
+		header('Content-type: application/json');
+
+		$response = json_decode($JSONString, true)['Buffer']; 
+		
+		//'{ "speech": "The lightning was changed", "DisplayText": "The lightning was changed", "Source": "IP-Symcon"}';
+
+		echo $response;
+	}
+	
     public function HandleWebData() {
 		//IPS_LogMessage("Debug", "Inside HandleWebData");
 		
@@ -79,10 +89,7 @@ class GoogleHomeController extends IPSModule {
 			IPS_LogMessage("Controller","Error");
 		}
 
-		header('Content-type: application/json');
-		$response =  '{ "speech": "The lightning was changed", "DisplayText": "The lightning was changed", "Source": "IP-Symcon"}';
-
-		echo $response;
+		
 
 				
 		$this->Unlock("HandleWebData");
