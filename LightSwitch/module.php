@@ -6,10 +6,11 @@ class GoogleHomeLightSwitch extends IPSModule {
     
     public function Create(){
         parent::Create();
+		$this->ConnectParent("{11B64703-256F-4E7F-8DD5-960D6A6C0DBB}");
         
         $this->RegisterPropertyBoolean ("log", false );
-	$this->RegisterPropertyInteger("instanceid",0);	
-	$this->RegisterPropertyString("switchtype", "z-wave");
+		$this->RegisterPropertyInteger("instanceid",0);	
+		$this->RegisterPropertyString("switchtype", "z-wave");
 
     
 	}

@@ -18,9 +18,9 @@ class GoogleHomeController extends IPSModule {
         parent::ApplyChanges();
 		
 		$ident="googlehome".$this->InstanceID;
-		$name="GoogleHome".$this->InstanceID."Hook";
+		$name="GoogleHomeWebHook";
 		$id = $this->RegisterScript($ident, $name, "<?\n//Do not modify!\nrequire_once(IPS_GetKernelDirEx().\"scripts/__ipsmodule.inc.php\");\nrequire_once(\"../modules/Google-Home/Controller/module.php\");\n(new GoogleHomeController(".$this->InstanceID."))->HandleWebData();\n?>");
-		$this->RegisterWebHook("/hook/".$ident, $id);
+		$this->RegisterWebHook("/hook/googlehome", $id);
 		
 		
 		
