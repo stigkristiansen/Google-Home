@@ -66,11 +66,11 @@ class GoogleHomeController extends IPSModule {
 		$username="";
 		$password="";
 		
-		if(!$this->Lock("HandleWebData")) {
+		/*if(!$this->Lock("HandleWebData")) {
 			$log->LogMessage("Waiting for unlock timed out!");
 			return;
 		}
-		
+		*/
 		$log->LogMessage("The controller is locked");
 		
 		$jsonRequest = file_get_contents('php://input');
@@ -94,7 +94,7 @@ class GoogleHomeController extends IPSModule {
 		$response = GetBuffer('response');	
 		if(strlen($response)==0) {
 			$log->LogMessage("Did not receive message from child to send back to Google in time");
-			$this->Unlock("HandleWebData");
+			//$this->Unlock("HandleWebData");
 			return;		
 		}
 		
@@ -103,7 +103,7 @@ class GoogleHomeController extends IPSModule {
 				
 		$log->LogMessage("Sendt response back to Google");
 
-		$this->Unlock("HandleWebData");
+		//$this->Unlock("HandleWebData");
     }
 	
 	
