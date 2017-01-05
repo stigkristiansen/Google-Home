@@ -22,14 +22,17 @@ class GoogleHomeController extends IPSModule {
 		$id = $this->RegisterScript($ident, $name, "<?\n//Do not modify!\nrequire_once(IPS_GetKernelDirEx().\"scripts/__ipsmodule.inc.php\");\nrequire_once(\"../modules/Google-Home/Controller/module.php\");\n(new GoogleHomeController(".$this->InstanceID."))->HandleWebData();\n?>");
 		$this->RegisterWebHook("/hook/googlehome", $id);
 		
+		$this->RegisterVariableString("buffer", "Buffer");
+		
     }
 
 	public function ForwardData($JSONString) {
 		$response = json_decode($JSONString, true)['Buffer'];
 				
 		IPS_LogMessage("Controller", "Got data from child: ".$response);
-			
-		$this->SetBuffer('response', $response);
+		
+		$bufferId = $this->GetIDForIdent("buffer");
+		SetValueString($bufferId, $response);
 		
 		IPS_LogMessage("Controller", "Set buffer to ".$response);
 	}
@@ -73,10 +76,11 @@ class GoogleHomeController extends IPSModule {
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => $jsonRequest)));
 
 		$log->LogMessage("Waiting for response from child device...");
+		$bufferId = $this->GetIDForIdent("buffer");
 		$response="";
 		$this->SetBuffer('response', '');
 		for($x=0;$x<5;$x++) {
-			$response = $this->GetBuffer('response');
+			$response = GetValueString($bufferId);
 			IPS_LogMessage("Controller:", "Response from child: ".$response);
 			
 			if(strlen($response)>0)
