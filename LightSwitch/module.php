@@ -12,6 +12,7 @@ class GoogleHomeLightSwitch extends IPSModule {
 		$this->RegisterPropertyInteger("instanceid",0);	
 		$this->RegisterPropertyString("switchtype", "z-wave");
 		$this->RegisterPropertyString("filter", "");
+		$this->RegisterPropertyString("room", "Bedroom");
     
 	}
 
