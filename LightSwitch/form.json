@@ -7,9 +7,21 @@
                 { "label": "xComfort", "value": "xcomfort" },
 				
             ]
-	},
-	{ "type": "SelectInstance", "name": "instanceid", "caption": "Light Switch Mapping" },
-	{ "type": "CheckBox", "name": "log", "caption": "Enable logging" }
+		},
+		{ "type": "ValidationTextBox", "name": "filter", "caption": "Filter" }
+		{ "type": "SelectInstance", "name": "instanceid", "caption": "Light Switch Mapping" },
+		{ "type": "CheckBox", "name": "log", "caption": "Enable logging" },
+		{ "type": "Select", "name": "room", "caption": "Google Home Room",
+            "options": [
+                { "label": "Bedroom", "value": "Bedroom" },
+                { "label": "Kitchen", "value": "Kitchen" },
+				{ "label": "Living room", "value": "Living room" },
+				{ "label": "Bath room", "value": "Bath room" },
+				{ "label": "Hallway", "value": "Hallway" },
+				{ "label": "Dining room", "value": "Dining room" },
+				{ "label": "Guest room", "value": "Guest room" }
+            ]
+		},
     ],
 
 }

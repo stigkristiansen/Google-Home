@@ -11,15 +11,18 @@ class GoogleHomeLightSwitch extends IPSModule {
         $this->RegisterPropertyBoolean ("log", false );
 		$this->RegisterPropertyInteger("instanceid",0);	
 		$this->RegisterPropertyString("switchtype", "z-wave");
-
+		$this->RegisterPropertyString("filter", "");
     
 	}
 
     public function ApplyChanges(){
         parent::ApplyChanges();
 		
-		$this->SetReceiveDataFilter(".*SwitchMode.*");
-		IPS_LogMessage("LightSwitch", "Applied seettings");
+		$filter = $this->ReadPropertyString("filter"); //"(?=.*\bSwitchMode\b).*";                     
+		$this->SetReceiveDataFilter($filter);
+		
+		$log = new Logging($this->ReadPropertyBoolean("log"), IPS_Getname($this->InstanceID));
+		$log->LogMessage("Set the ReceiveFilter to ".$filter);
 		
 		        
     }
