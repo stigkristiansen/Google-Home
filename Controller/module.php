@@ -74,12 +74,13 @@ class GoogleHomeController extends IPSModule {
 		$log->LogMessage("Waiting for response from child device...");
 		$response="";
 		$this->SetBuffer('response', '');
-		for($x=0;$x<100;$x++) {
+		for($x=0;$x<5;$x++) {
 			$response = $this->GetBuffer('response');
+			
 			if(strlen($response)>0)
 				break;
 			
-			IPS_Sleep(50);
+			IPS_Sleep(1000);
 		}
 			
 				
