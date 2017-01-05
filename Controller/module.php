@@ -27,6 +27,7 @@ class GoogleHomeController extends IPSModule {
 	public function ForwardData($JSONString) {
 		$response = json_decode($JSONString, true)['Buffer']; $
 		
+		
 		IPS_LogMessage("Controller", "Got data: ".$JSONString);
 			
 		$this->SetBuffer('response', $response);
