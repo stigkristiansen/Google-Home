@@ -26,11 +26,12 @@ class GoogleHomeController extends IPSModule {
 
 	public function ForwardData($JSONString) {
 		$response = json_decode($JSONString, true)['Buffer'];
-		
-		
-		IPS_LogMessage("Controller", "Got data: ".$JSONString);
+				
+		IPS_LogMessage("Controller", "Got data from child: ".$response);
 			
 		$this->SetBuffer('response', $response);
+		
+		IPS_LogMessage("Controller", "Set buffer to ".$response);
 	}
 	
     public function HandleWebData() {
@@ -76,6 +77,7 @@ class GoogleHomeController extends IPSModule {
 		$this->SetBuffer('response', '');
 		for($x=0;$x<5;$x++) {
 			$response = $this->GetBuffer('response');
+			IPS_LogMessage("Controller:", "Response from child: ".$response);
 			
 			if(strlen($response)>0)
 				break;
