@@ -79,7 +79,7 @@ class GoogleHomeController extends IPSModule {
 		//$bufferId = $this->GetIDForIdent("buffer");
 		//SetValueString($bufferId, "");
 		
-		$this->SetBuffer('response', '');
+		$this->SetBuffer('buffer', '');
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => $jsonRequest)));
 
 		$log->LogMessage("Waiting for response from child device...");
