@@ -18,7 +18,7 @@ class GoogleHomeLightSwitch extends IPSModule {
     public function ApplyChanges(){
         parent::ApplyChanges();
 		
-		$this->SetReceiveDataFilter("^Start (?=.*\bSwitchMode\b).*");
+		$this->SetReceiveDataFilter(".*SwitchMode.*");
 		
 		        
     }
