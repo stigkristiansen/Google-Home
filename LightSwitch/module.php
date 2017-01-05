@@ -20,7 +20,7 @@ class GoogleHomeLightSwitch extends IPSModule {
         parent::ApplyChanges();
 		
 		$filter = $this->ReadPropertyString("filter"); //"(?=.*\bSwitchMode\b).*";                     
-		$this->SetReceiveDataFilter($filter);
+		//$this->SetReceiveDataFilter($filter);
 		
 		$log = new Logging($this->ReadPropertyBoolean("log"), IPS_Getname($this->InstanceID));
 		$log->LogMessage("Set the ReceiveFilter to ".$filter);
