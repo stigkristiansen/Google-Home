@@ -20,7 +20,8 @@ class GoogleHomeLightSwitch extends IPSModule {
         parent::ApplyChanges();
 		
 		$filter = $this->ReadPropertyString("filter"); //"(?=.*\bSwitchMode\b).*";                     
-		//$this->SetReceiveDataFilter($filter);
+		if(strlen($filter)>0)
+			$this->SetReceiveDataFilter($filter);
 		
 		$log = new Logging($this->ReadPropertyBoolean("log"), IPS_Getname($this->InstanceID));
 		$log->LogMessage("Set the ReceiveFilter to ".$filter);
@@ -71,6 +72,8 @@ class GoogleHomeLightSwitch extends IPSModule {
 				$log->LogMessage("The switch command failed: XY_SwitchMode(".$instance.", ".$value.")");
 			}
 			
+			
+		} else {
 			
 		}
 
