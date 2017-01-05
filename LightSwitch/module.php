@@ -26,7 +26,6 @@ class GoogleHomeLightSwitch extends IPSModule {
 		$log = new Logging($this->ReadPropertyBoolean("log"), IPS_Getname($this->InstanceID));
 		$log->LogMessage("Set the ReceiveFilter to ".$filter);
 		
-		        
     }
 
     public function ReceiveData($JSONString) {
