@@ -34,26 +34,44 @@ class GoogleHomeLightSwitch extends IPSModule {
 
 		$data = json_decode(json_decode($JSONString, true)['Buffer'], true);
 	
-		$action = $data['result']['action'];
-		$room = $data['result']['parameters']['rooms'];
+		$action = strtolower($data['result']['action']);
+		$room = strtolower($data['result']['parameters']['rooms']);
 		
 		$log->LogMessage("Action: ".$action);
-		$log->LogMessage("Room".$room);
+		$log->LogMessage("Room; ".$room);
 		
 		$selectedRoom = $this->ReadPropertyString("room");
 		
-		if($action=="SwitchMode" && $room=$selectedRoom) {
-			$valueText = $data['result']['parameters']['light-action-switch1']; 
+		if($action=="switchmode" && $room=$selectedRoom) {
+			$valueText = strtolower($data['result']['parameters']['light-action-switch1']); 
 			$value = ($valueText=="off"?false:true);
-		
-			$logMessage = "The light was switched ".$valueText." in the ".$room;	
-			$log->LogMessage($logMessage);
 			
-			$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
+			$instance = $this->ReadPropertyInteger("instanceid");
+			$switchType = $this->ReadPropertyString("switchtype");
+			
+			try{
+				if($switchtype=="z-wave") {
+					$log->LogMessage("The system is z-wave");
+					ZW_SwitchMode($instance, $value);
+				} else {
+					$log->LogMessage("The system is xComfort");
+					MXC_SwitchMode($instance, $value);
+				}
 				
-			$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
+				$logMessage = "The light was switched ".$valueText." in the ".$room;	
+				$log->LogMessage($logMessage);
+				
+				$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
+					
+				$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
+				
+				$log->LogMessage("Sendt response back to parent");
 			
-			$log->LogMessage("Sendt response back to parent");
+			catch(exeption $ex) {
+				$log->LogMessage("The switch command failed: XY_SwitchMode(".$instance.", ".$value.")");
+			}
+			
+			
 		}
 
     }
