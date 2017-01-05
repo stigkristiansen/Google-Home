@@ -67,7 +67,7 @@ class GoogleHomeLightSwitch extends IPSModule {
 				
 				$log->LogMessage("Sendt response back to parent");
 			
-			catch(exeption $ex) {
+			} catch(exeption $ex) {
 				$log->LogMessage("The switch command failed: XY_SwitchMode(".$instance.", ".$value.")");
 			}
 			
