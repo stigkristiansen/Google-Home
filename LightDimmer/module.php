@@ -2,7 +2,7 @@
 
 require_once(__DIR__ . "/../logging.php");
 
-class GoogleHomeLightSwitch extends IPSModule {
+class GoogleHomeLightDimmer extends IPSModule {
     
     public function Create(){
         parent::Create();
