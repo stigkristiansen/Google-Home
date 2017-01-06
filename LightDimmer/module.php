@@ -13,6 +13,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 		$this->RegisterPropertyString("switchtype", "z-wave");
 		$this->RegisterPropertyString("filter", "");
 		$this->RegisterPropertyString("room", "Bedroom");
+		$this->RegisterPropertyInteger("defaultsteps", 10);
     
 	}
 
@@ -42,7 +43,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 		$selectedRoom = $this->ReadPropertyString("room");
 		
 		if($action=="dimmingmode" && $room=$selectedRoom) {
-			$defaultStep = 10;
+			$defaultSteps = $this->ReadPropertyInteger('defaultsteps');
 			
 			if(array_key_exists('number', $data['result']['parameters']['dimming'][0]))
 				$value = $data['result']['parameters']['dimming'][0]['number'];
