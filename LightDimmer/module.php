@@ -61,7 +61,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 			try{
 				if($switchType=="z-wave") {
 					$log->LogMessage("The system chosen is z-wave");
-					ZW_ZW_DimSet($instance, $value);
+					ZW_DimSet($instance, $value);
 				} else if($switchType=="xcomfort"){
 					$log->LogMessage("The system chosen is xComfort");
 					MXC_DimSet($instance, $value);
