@@ -47,7 +47,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 		$log->LogMessage("Room: ".$room);
 		$log->LogMessage("Room filter: ".$selectedRoom);
 				
-		if($action=="dimmingmode" && $room==$selectedRoom) {
+		if($action==="dimmingmode" && $room===$selectedRoom) {
 			$defaultSteps = $this->ReadPropertyInteger('defaultsteps');
 			
 			if(array_key_exists('number', $data['result']['parameters']['dimming'][0]))

@@ -47,7 +47,7 @@ class GoogleHomeLightSwitch extends IPSModule {
 		$log->LogMessage("Room filter: ".$selectedRoom);
 		
 		
-		if($action=="switchmode" && $room=$selectedRoom) {
+		if($action==="switchmode" & $room===$selectedRoom) {
 			$valueText = strtolower($data['result']['parameters']['light-action-switch1']); 
 			$value = ($valueText=="off"?false:true);
 			
