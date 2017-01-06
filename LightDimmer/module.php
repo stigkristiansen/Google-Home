@@ -48,7 +48,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 			if(array_key_exists('number', $data['result']['parameters']['dimming'][0]))
 				$value = $data['result']['parameters']['dimming'][0]['number'];
 			else
-				$value = $defaultStep;
+				$value = $defaultSteps;
 
 			if(array_key_exists('dim-direction', $data['result']['parameters']['dimming'][0]))	
 				$direction = $data['result']['parameters']['dimming'][0]['dim-direction'];
