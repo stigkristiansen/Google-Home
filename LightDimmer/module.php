@@ -37,18 +37,21 @@ class GoogleHomeLightDimmer extends IPSModule {
 	
 		$action = strtolower($data['result']['action']);
 		$room = strtolower($data['result']['parameters']['rooms']);
-		
-		
-		
+			
 		$selectedRoom = $this->ReadPropertyString("room");
 		
-		if($action=="dimmingmode" && $room=$selectedRoom) {
+		$log->LogMessage("Action: ".$action);
+		$log->LogMessage("Action filter: "."switchmode");
+		$log->LogMessage("Room: ".$rom);
+		$log->LogMessage("Room filter: ".$selectedRoom);
+				
+		if($action=="dimmingmode" && $room==$selectedRoom) {
 			$defaultSteps = $this->ReadPropertyInteger('defaultsteps');
 			
 			if(array_key_exists('number', $data['result']['parameters']['dimming'][0]))
 				$value = $data['result']['parameters']['dimming'][0]['number'];
 			else
-				$value = $defaultSteps;
+				$value = $defaultStep;
 
 			if(array_key_exists('dim-direction', $data['result']['parameters']['dimming'][0]))	
 				$direction = $data['result']['parameters']['dimming'][0]['dim-direction'];
@@ -80,10 +83,9 @@ class GoogleHomeLightDimmer extends IPSModule {
 			} catch(exeption $ex) {
 				$log->LogMessage("The switch command failed: XYZ_SwitchMode(".$instance.", ".$value.")");
 			}
-			
-			
+						
 		} else {
-			
+			$log->LogMessage("Did not pass the filter test");	
 		}
 
     }
