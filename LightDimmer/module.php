@@ -39,23 +39,33 @@ class GoogleHomeLightSwitch extends IPSModule {
 		
 		$selectedRoom = $this->ReadPropertyString("room");
 		
-		if($action=="switchmode" && $room=$selectedRoom) {
-			$valueText = strtolower($data['result']['parameters']['light-action-switch1']); 
-			$value = ($valueText=="off"?false:true);
+		if($action=="switchdimmer" && $room=$selectedRoom) {
+			$defaultStep = 10;
 			
+			if(array_key_exists('number', $data['result']['parameters']['dimming'][0]))
+				$value = $data['result']['parameters']['dimming'][0]['number'];
+			else
+				$value = $defaultStep;
+
+			if(array_key_exists('dim-direction', $data['result']['parameters']['dimming'][0]))	
+				$direction = $data['result']['parameters']['dimming'][0]['dim-direction'];
+			else
+				$direction = "preset";
+				
+					
 			$instance = $this->ReadPropertyInteger("instanceid");
 			$switchType = $this->ReadPropertyString("switchtype");
 			
 			try{
 				if($switchType=="z-wave") {
 					$log->LogMessage("The system chosen is z-wave");
-					ZW_SwitchMode($instance, $value);
+					ZW_ZW_DimSet($instance, $value);
 				} else if($switchType=="xcomfort"){
 					$log->LogMessage("The system chosen is xComfort");
-					MXC_SwitchMode($instance, $value);
+					MXC_DimSet($instance, $value);
 				}
 				
-				$logMessage = "The light was switched ".$valueText." in the ".$room;	
+				$logMessage = ($direction=='preset'?"Dimming light to preset value ".$value:"Dimming light ".$direction." to ".$value);
 				$log->LogMessage($logMessage);
 				
 				$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
@@ -65,7 +75,7 @@ class GoogleHomeLightSwitch extends IPSModule {
 				$log->LogMessage("Sendt response back to parent");
 			
 			} catch(exeption $ex) {
-				$log->LogMessage("The switch command failed: XY_SwitchMode(".$instance.", ".$value.")");
+				$log->LogMessage("The switch command failed: XYZ_SwitchMode(".$instance.", ".$value.")");
 			}
 			
 			
