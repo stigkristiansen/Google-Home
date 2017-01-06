@@ -33,7 +33,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 		
 		$log = new Logging($this->ReadPropertyBoolean("log"), IPS_Getname($this->InstanceID));
 
-		$this->LogMessage("Received json: ".json_decode($JSONString, true)['Buffer']);
+		$log->LogMessage("Received json: ".json_decode($JSONString, true)['Buffer']);
 		
 		$data = json_decode(json_decode($JSONString, true)['Buffer'], true);
 	
