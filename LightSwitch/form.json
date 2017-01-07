@@ -11,10 +11,12 @@
 		{ "type": "ValidationTextBox", "name": "filter", "caption": "Filter" },
 		{ "type": "SelectInstance", "name": "instanceid", "caption": "Light Switch Mapping" },
 		{ "type": "CheckBox", "name": "log", "caption": "Enable logging" },
-		{ "type": "Select", "name": "room", "caption": "Google Home Room",
+				{ "type": "Select", "name": "room", "caption": "Google Home Room",
             "options": [
                 { "label": "Bedroom", "value": "Bedroom" },
+				{ "label": "Bedroom bedlight", "value": "Bedroom bedlight" },
                 { "label": "Kitchen", "value": "Kitchen" },
+				{ "label": "Kitchen bench", "value": "Kitchen bench" },
 				{ "label": "Living room", "value": "Living room" },
 				{ "label": "Bath room", "value": "Bath room" },
 				{ "label": "Hallway", "value": "Hallway" },

@@ -84,7 +84,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 					$log->LogMessage("Sendt response back to parent");
 				
 				} catch(exeption $ex) {
-					$log->LogMessage("The switch command failed: XYZ_SwitchMode(".$instance.", ".$value.")");
+					$log->LogMessage("The dim command failed: XYZ_DimMode(".$instance.", ".$value.")");
 				}
 			}
 
