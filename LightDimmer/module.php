@@ -47,45 +47,77 @@ class GoogleHomeLightDimmer extends IPSModule {
 		$log->LogMessage("Room: ".$room);
 		$log->LogMessage("Room filter: ".$selectedRoom);
 				
-		if($action==="dimmingmode" && $room===$selectedRoom) {
-			$defaultSteps = $this->ReadPropertyInteger('defaultsteps');
-			
-			if(array_key_exists('number', $data['result']['parameters']['dimming'][0]))
-				$value = $data['result']['parameters']['dimming'][0]['number'];
-			else
-				$value = $defaultStep;
+		if(($action==="switchmode" || $action==="dimmingmode") && $room===$selectedRoom) {
+			if($action==="dimmingmode") {
+				$defaultSteps = $this->ReadPropertyInteger('defaultsteps');
+				
+				if(array_key_exists('number', $data['result']['parameters']['dimming'][0]))
+					$value = $data['result']['parameters']['dimming'][0]['number'];
+				else
+					$value = $defaultStep;
 
-			if(array_key_exists('dim-direction', $data['result']['parameters']['dimming'][0]))	
-				$direction = $data['result']['parameters']['dimming'][0]['dim-direction'];
-			else
-				$direction = "preset";
-				
-					
-			$instance = $this->ReadPropertyInteger("instanceid");
-			$switchType = $this->ReadPropertyString("switchtype");
-			
-			try{
-				if($switchType=="z-wave") {
-					$log->LogMessage("The system chosen is z-wave");
-					ZW_DimSet($instance, $value);
-				} else if($switchType=="xcomfort"){
-					$log->LogMessage("The system chosen is xComfort");
-					MXC_DimSet($instance, $value);
-				}
-				
-				$logMessage = ($direction=='preset'?"Dimming light to preset value ".$value:"Dimming light ".$direction." to ".$value);
-				$log->LogMessage($logMessage);
-				
-				$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
-					
-				$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
-				
-				$log->LogMessage("Sendt response back to parent");
-			
-			} catch(exeption $ex) {
-				$log->LogMessage("The switch command failed: XYZ_SwitchMode(".$instance.", ".$value.")");
-			}
+				if(array_key_exists('dim-direction', $data['result']['parameters']['dimming'][0]))	
+					$direction = $data['result']['parameters']['dimming'][0]['dim-direction'];
+				else
+					$direction = "preset";
 						
+				$instance = $this->ReadPropertyInteger("instanceid");
+				$switchType = $this->ReadPropertyString("switchtype");
+				
+				try{
+					if($switchType=="z-wave") {
+						$log->LogMessage("The system chosen is z-wave");
+						ZW_DimSet($instance, $value);
+					} else if($switchType=="xcomfort"){
+						$log->LogMessage("The system chosen is xComfort");
+						MXC_DimSet($instance, $value);
+					}
+					
+					$logMessage = ($direction=='preset'?"Dimming light to preset value ".$value:"Dimming light ".$direction." to ".$value);
+					$logMessage.=" in the ".$room;
+					$log->LogMessage($logMessage);
+					
+					$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
+						
+					$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
+					
+					$log->LogMessage("Sendt response back to parent");
+				
+				} catch(exeption $ex) {
+					$log->LogMessage("The switch command failed: XYZ_SwitchMode(".$instance.", ".$value.")");
+				}
+			}
+
+			if($action==="switchmode") {
+				$valueText = strtolower($data['result']['parameters']['light-action-switch1']); 
+				$value = ($valueText=="off"?false:true);
+				
+				$instance = $this->ReadPropertyInteger("instanceid");
+				$switchType = $this->ReadPropertyString("switchtype");
+				
+				try{
+					if($switchType=="z-wave") {
+						$log->LogMessage("The system chosen is z-wave");
+						ZW_SwitchMode($instance, $value);
+					} else if($switchType=="xcomfort"){
+						$log->LogMessage("The system chosen is xComfort");
+						MXC_SwitchMode($instance, $value);
+					}
+					
+					$logMessage = "The light was switched ".$valueText." in the ".$room;	
+					$log->LogMessage($logMessage);
+					
+					$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
+						
+					$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
+					
+					$log->LogMessage("Sendt response back to parent");
+				
+				} catch(exeption $ex) {
+					$log->LogMessage("The switch command failed: XY_SwitchMode(".$instance.", ".$value.")");
+				}
+
+			}
 		} else {
 			$log->LogMessage("Did not pass the filter test");	
 		}
