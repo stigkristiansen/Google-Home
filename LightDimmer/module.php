@@ -89,7 +89,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 			}
 
 			if($action==="switchmode") {
-				$valueText = strtolower($data['result']['parameters']['light-action-switch1']); 
+				$valueText = strtolower($data['result']['parameters']['light-action-switch1'][0]); 
 				$value = ($valueText=="off"?false:true);
 				
 				$instance = $this->ReadPropertyInteger("instanceid");
@@ -97,10 +97,10 @@ class GoogleHomeLightDimmer extends IPSModule {
 				
 				try{
 					if($switchType=="z-wave") {
-						$log->LogMessage("The system chosen is z-wave");
+						$log->LogMessage("The system is z-wave");
 						ZW_SwitchMode($instance, $value);
 					} else if($switchType=="xcomfort"){
-						$log->LogMessage("The system chosen is xComfort");
+						$log->LogMessage("The system is xComfort");
 						MXC_SwitchMode($instance, $value);
 					}
 					

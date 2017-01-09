@@ -56,10 +56,10 @@ class GoogleHomeLightSwitch extends IPSModule {
 			
 			try{
 				if($switchType=="z-wave") {
-					$log->LogMessage("The system chosen is z-wave");
+					$log->LogMessage("The system is z-wave");
 					ZW_SwitchMode($instance, $value);
 				} else if($switchType=="xcomfort"){
-					$log->LogMessage("The system chosen is xComfort");
+					$log->LogMessage("The system is xComfort");
 					MXC_SwitchMode($instance, $value);
 				}
 				
