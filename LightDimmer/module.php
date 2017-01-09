@@ -54,7 +54,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 				
 				$instance = $this->ReadPropertyInteger("instanceid");
 				
-				$defaultPreset; = $this->ReadPropertyInteger("defaultpreset");;
+				$defaultPreset = $this->ReadPropertyInteger("defaultpreset");
 			
 				$direction = "preset";
 				if(array_key_exists('dim-direction', $data['result']['parameters']['dimming'][0]['dim-direction']))	{
