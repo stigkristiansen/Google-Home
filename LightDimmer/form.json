@@ -9,6 +9,7 @@
             ]
 		},
 		{ "type": "IntervalBox", "name": "defaultsteps", "caption": "(Default steps)" },
+		{ "type": "IntervalBox", "name": "defaultpreset", "caption": "(Default preset)" },
 		{ "type": "ValidationTextBox", "name": "filter", "caption": "Filter" },
 		{ "type": "SelectInstance", "name": "instanceid", "caption": "Light Dimmer Mapping" },
 		{ "type": "CheckBox", "name": "log", "caption": "Enable logging" },

@@ -14,6 +14,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 		$this->RegisterPropertyString("filter", "");
 		$this->RegisterPropertyString("room", "Bedroom");
 		$this->RegisterPropertyInteger("defaultsteps", 10);
+		$this->RegisterPropertyInteger("defaultpreset", 50);
     
 	}
 
@@ -51,19 +52,41 @@ class GoogleHomeLightDimmer extends IPSModule {
 			if($action==="dimmingmode") {
 				$defaultSteps = $this->ReadPropertyInteger('defaultsteps');
 				
-				if(array_key_exists('number', $data['result']['parameters']['dimming'][0]))
-					$value = $data['result']['parameters']['dimming'][0]['number'];
-				else
-					$value = $defaultStep;
-
-				if(array_key_exists('dim-direction', $data['result']['parameters']['dimming'][0]))	
-					$direction = $data['result']['parameters']['dimming'][0]['dim-direction'];
-				else
-					$direction = "preset";
-						
 				$instance = $this->ReadPropertyInteger("instanceid");
-				$switchType = $this->ReadPropertyString("switchtype");
 				
+				$defaultPreset; = $this->ReadPropertyInteger("defaultpreset");;
+			
+				$direction = "preset";
+				if(array_key_exists('dim-direction', $data['result']['parameters']['dimming'][0]['dim-direction']))	{
+					$direction = $data['result']['parameters']['dimming'][0]['dim-direction'];
+					
+					if(array_key_exists('number', $data['result']['parameters']['dimming'][0]['number']))
+						$value = $data['result']['parameters']['dimming'][0]['number'];
+					else
+						$value = $defaultSteps;
+					
+					if($direction==='up') {
+						$value+=GetValueInteger(IPS_GetVariableIdByName('Intensity', $instance);
+						if($value>100)
+							$value=100;
+					}
+					if($direction==='down') { 
+						$value=GetValueInteger(IPS_GetVariableIdByName('Intensity', $instance)-$value;
+						if($value<0)
+							$value=0;
+					}
+					
+					if($direction==='up to'||$direction==='down to')
+						$direction='preset';
+				} else {					
+					if(array_key_exists('number', $data['result']['parameters']['dimming'][0]['number']))
+						$value = $data['result']['parameters']['dimming'][0]['number'];
+					else
+						$value = $defaultPreset;		
+				}
+				
+				$switchType = $this->ReadPropertyString("switchtype");
+				       
 				try{
 					if($switchType=="z-wave") {
 						$log->LogMessage("The system is z-wave");
