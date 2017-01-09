@@ -66,12 +66,12 @@ class GoogleHomeLightDimmer extends IPSModule {
 						$value = $defaultSteps;
 					
 					if($direction==='up') {
-						$value+=GetValueInteger(IPS_GetVariableIdByName('Intensity', $instance);
+						$value+=GetValueInteger(IPS_GetVariableIdByName('Intensity', $instance));
 						if($value>100)
 							$value=100;
 					}
 					if($direction==='down') { 
-						$value=GetValueInteger(IPS_GetVariableIdByName('Intensity', $instance)-$value;
+						$value=GetValueInteger(IPS_GetVariableIdByName('Intensity', $instance))-$value;
 						if($value<0)
 							$value=0;
 					}
