@@ -57,10 +57,10 @@ class GoogleHomeLightDimmer extends IPSModule {
 				$defaultPreset = $this->ReadPropertyInteger("defaultpreset");
 			
 				$direction = "preset";
-				if(array_key_exists('dim-direction', $data['result']['parameters']['dimming'][0]['dim-direction']))	{
+				if(array_key_exists('dim-direction', $data['result']['parameters']['dimming'][0])){
 					$direction = $data['result']['parameters']['dimming'][0]['dim-direction'];
 					
-					if(array_key_exists('number', $data['result']['parameters']['dimming'][0]['number']))
+					if(array_key_exists('number', $data['result']['parameters']['dimming'][0]))
 						$value = $data['result']['parameters']['dimming'][0]['number'];
 					else
 						$value = $defaultSteps;
@@ -79,7 +79,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 					if($direction==='up to'||$direction==='down to')
 						$direction='preset';
 				} else {					
-					if(array_key_exists('number', $data['result']['parameters']['dimming'][0]['number']))
+					if(array_key_exists('number', $data['result']['parameters']['dimming'][0]))
 						$value = $data['result']['parameters']['dimming'][0]['number'];
 					else
 						$value = $defaultPreset;		
