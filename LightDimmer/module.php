@@ -66,15 +66,15 @@ class GoogleHomeLightDimmer extends IPSModule {
 				
 				try{
 					if($switchType=="z-wave") {
-						$log->LogMessage("The system chosen is z-wave");
+						$log->LogMessage("The system is z-wave");
 						ZW_DimSet($instance, $value);
 					} else if($switchType=="xcomfort"){
-						$log->LogMessage("The system chosen is xComfort");
+						$log->LogMessage("The system is xComfort");
 						MXC_DimSet($instance, $value);
 					}
 					
-					$logMessage = ($direction=='preset'?"Dimming light to preset value ".$value:"Dimming light ".$direction." to ".$value);
-					$logMessage.=" in the ".$room;
+					$logMessage = ($direction=='preset'?"Dimming light to ".$value." percent":"Dimming light ".$direction." to ".$value." percent");
+					//$logMessage.=" in the ".$room;
 					$log->LogMessage($logMessage);
 					
 					$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
@@ -104,7 +104,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 						MXC_SwitchMode($instance, $value);
 					}
 					
-					$logMessage = "The light was switched ".$valueText." in the ".$room;	
+					$logMessage = "The light was switched ".$valueText;	
 					$log->LogMessage($logMessage);
 					
 					$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';

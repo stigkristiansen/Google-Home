@@ -63,7 +63,7 @@ class GoogleHomeLightSwitch extends IPSModule {
 					MXC_SwitchMode($instance, $value);
 				}
 				
-				$logMessage = "The light was switched ".$valueText." in the ".$room;	
+				$logMessage = "The light was switched ".$valueText;	
 				$log->LogMessage($logMessage);
 				
 				$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
