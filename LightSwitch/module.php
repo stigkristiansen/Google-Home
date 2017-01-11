@@ -5,6 +5,7 @@ require_once(__DIR__ . "/../logging.php");
 class GoogleHomeLightSwitch extends IPSModule {
     
     public function Create(){
+	    //Stig
         parent::Create();
 		$this->ConnectParent("{11B64703-256F-4E7F-8DD5-960D6A6C0DBB}");
         
