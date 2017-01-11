@@ -1,14 +1,14 @@
 { 
     "id" :  "{7E75D652-EF76-413D-B138-6DF8E807FF07}" , 
-    "name" :  "GoogleHomeThermostat" , 
+    "name" :  "GoogleHomeMultimedia" , 
     "type" :  3 , 
     "vendor" :  "Stig Kristiansen" , 
     "aliases" : 
     [ 
-        "Google Home Thermostat"  
+        "Google Home Multimedia"  
     ] ,   
     "parentRequirements" :  ["{8A83D53D-934E-4DD7-8054-A794D0723FED}"] , 
     "childRequirements" :  [] , 
     "implemented" :  ["{11ACFC89-5700-4B2A-A93C-18CAB413839C}"] , 
-    "prefix" :  "GHT" 
+    "prefix" :  "GHM" 
 }

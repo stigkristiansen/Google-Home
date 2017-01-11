@@ -2,7 +2,7 @@
 
 require_once(__DIR__ . "/../logging.php");
 
-class GoogleHomeThermostat extends IPSModule {
+class GoogleHomeMultimedia extends IPSModule {
     
     public function Create(){
         parent::Create();

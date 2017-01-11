@@ -39,17 +39,20 @@ class GoogleHomeLightDimmer extends IPSModule {
 		$data = json_decode(json_decode($JSONString, true)['Buffer'], true);
 	
 		$action = strtolower($data['result']['action']);
-		$room = strtolower($data['result']['parameters']['rooms']);
+		$room = strtolower($data['result']['parameters']['location']);
+		$component = strtolower($data['result']['parameters']['component']);
 			
 		$selectedRoom = strtolower($this->ReadPropertyString("room"));
 		
 		$log->LogMessage("Action: ".$action);
-		$log->LogMessage("Action filter: "."switchmode");
-		$log->LogMessage("Room: ".$room);
+		$log->LogMessage("Action filter: "."switchmode||adjustmode");
+		$log->LogMessage("Room: ".$location);
 		$log->LogMessage("Room filter: ".$selectedRoom);
-				
-		if(($action==="switchmode" || $action==="dimmingmode") && $room===$selectedRoom) {
-			if($action==="dimmingmode") {
+		$log->LogMessage("Component: ".$component);
+		$log->LogMessage("Component filter: "."light");
+						
+		if(($action==="switchmode" || $action==="adjustmode") && $room===$selectedRoom && $component==='light') {
+			if($action==="adjustgmode") {
 				$defaultSteps = $this->ReadPropertyInteger('defaultsteps');
 				
 				$instance = $this->ReadPropertyInteger("instanceid");
@@ -57,11 +60,11 @@ class GoogleHomeLightDimmer extends IPSModule {
 				$defaultPreset = $this->ReadPropertyInteger("defaultpreset");
 			
 				$direction = "preset";
-				if(array_key_exists('dim-direction', $data['result']['parameters']['dimming'][0])){
-					$direction = $data['result']['parameters']['dimming'][0]['dim-direction'];
+				if(array_key_exists('direction', $data['result']['parameters']['state'])){
+					$direction = $data['result']['parameters']['state']['direction'];
 					
-					if(array_key_exists('number', $data['result']['parameters']['dimming'][0]))
-						$value = $data['result']['parameters']['dimming'][0]['number'];
+					if(array_key_exists('number', $data['result']['parameters']['state']))
+						$value = $data['result']['parameters']['state']['number'];
 					else
 						$value = $defaultSteps;
 					
@@ -79,8 +82,8 @@ class GoogleHomeLightDimmer extends IPSModule {
 					if($direction==='up to'||$direction==='down to')
 						$direction='preset';
 				} else {					
-					if(array_key_exists('number', $data['result']['parameters']['dimming'][0]))
-						$value = $data['result']['parameters']['dimming'][0]['number'];
+					if(!array_key_exists('number', $data['result']['parameters']['state'][0]))
+						$value = $data['result']['parameters']['state']['number'];
 					else
 						$value = $defaultPreset;		
 				}
@@ -112,9 +115,9 @@ class GoogleHomeLightDimmer extends IPSModule {
 			}
 
 			if($action==="switchmode") {
-				$valueText = strtolower($data['result']['parameters']['light-action-switch1'][0]); 
+				$valueText = strtolower($data['result']['parameters']['state']); 
 				$value = ($valueText=="off"?false:true);
-				
+							
 				$instance = $this->ReadPropertyInteger("instanceid");
 				$switchType = $this->ReadPropertyString("switchtype");
 				
