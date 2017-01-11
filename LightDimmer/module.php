@@ -46,7 +46,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 		
 		$log->LogMessage("Action: ".$action);
 		$log->LogMessage("Action filter: "."switchmode||adjustmode");
-		$log->LogMessage("Room: ".$location);
+		$log->LogMessage("Room: ".$room);
 		$log->LogMessage("Room filter: ".$selectedRoom);
 		$log->LogMessage("Component: ".$component);
 		$log->LogMessage("Component filter: "."light");
