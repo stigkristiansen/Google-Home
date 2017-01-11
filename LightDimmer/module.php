@@ -82,7 +82,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 					if($direction==='up to'||$direction==='down to')
 						$direction='preset';
 				} else {					
-					if(!array_key_exists('number', $data['result']['parameters']['state'][0]))
+					if(!array_key_exists('number', $data['result']['parameters']['state']))
 						$value = $data['result']['parameters']['state']['number'];
 					else
 						$value = $defaultPreset;		
