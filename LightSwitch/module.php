@@ -46,7 +46,7 @@ class GoogleHomeLightSwitch extends IPSModule {
 		$log->LogMessage("Action filter: "."switchmode");
 		$log->LogMessage("Room: ".$room);
 		$log->LogMessage("Room filter: ".$selectedRoom);
-		$log->LogMessage("Component: ".$component;
+		$log->LogMessage("Component: ".$component);
 		$log->LogMessage("Component filter: "."switch");
 		
 		if($action==="switchmode" && $component==='light' && $room===$selectedRoom) {
