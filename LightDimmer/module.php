@@ -52,7 +52,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 		$log->LogMessage("Component filter: "."light");
 						
 		if(($action==="switchmode" || $action==="adjustmode") && $room===$selectedRoom && $component==='light') {
-			if($action==="adjustgmode") {
+			if($action==="adjustmode") {
 				$defaultSteps = $this->ReadPropertyInteger('defaultsteps');
 				
 				$instance = $this->ReadPropertyInteger("instanceid");
