@@ -38,18 +38,19 @@ class GoogleHomeLightSwitch extends IPSModule {
 		$data = json_decode(json_decode($JSONString, true)['Buffer'], true);
 	
 		$action = strtolower($data['result']['action']);
-		$room = strtolower($data['result']['parameters']['rooms']);
-		
+		$room = strtolower($data['result']['parameters']['location']);
+		$component = strtolower($data['result']['parameters']['component']);
 		$selectedRoom = strtolower($this->ReadPropertyString("room"));
 
 		$log->LogMessage("Action: ".$action);
 		$log->LogMessage("Action filter: "."switchmode");
 		$log->LogMessage("Room: ".$room);
 		$log->LogMessage("Room filter: ".$selectedRoom);
+		$log->LogMessage("Component: ".$component;
+		$log->LogMessage("Component filter: "."switch");
 		
-		
-		if($action==="switchmode" && $room===$selectedRoom) {
-			$valueText = strtolower($data['result']['parameters']['light-action-switch1'][0]); 
+		if($action==="switchmode" && $component==='light' && $room===$selectedRoom) {
+			$valueText = strtolower($data['result']['parameters']['state']); 
 			$value = ($valueText=="off"?false:true);
 			
 			$instance = $this->ReadPropertyInteger("instanceid");
