@@ -1,0 +1,19 @@
+{
+    "elements":
+    [
+        { "type": "ValidationTextBox", "name": "filter", "caption": "Filter" },
+		{ "type": "SelectScript", "name": "scriptid", "caption": "Scene Mapping" },
+		{ "type": "CheckBox", "name": "log", "caption": "Enable logging" },
+		{ "type": "Select", "name": "scene", "caption": "Google Home Scene",
+            "options": [
+                { "label": "Arrival", "value": "Arrival" },
+				{ "label": "Departure", "value": "Departure" },
+                { "label": "Morning", "value": "Morning" },
+				{ "label": "Night", "value": "Night" },
+				{ "label": "Movie", "value": "Movie" }
+            ]
+		},
+    ],
+
+}
+
