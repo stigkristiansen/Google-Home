@@ -10,7 +10,9 @@
 				{ "label": "Departure", "value": "Departure" },
                 { "label": "Morning", "value": "Morning" },
 				{ "label": "Night", "value": "Night" },
+				{ "label": "Dinner", "value": "Dinner" },
 				{ "label": "Movie", "value": "Movie" }
+				
             ]
 		},
     ],

@@ -13,6 +13,8 @@ class GoogleHomeThermostat extends IPSModule {
 		$this->RegisterPropertyString("switchtype", "z-wave");
 		$this->RegisterPropertyString("filter", "");
 		$this->RegisterPropertyString("room", "Bedroom");
+		$this->RegisterPropertyInteger("defaultsteps", 5);
+		$this->RegisterPropertyInteger("defaultpreset", 22);
     
 	}
 
@@ -37,33 +39,73 @@ class GoogleHomeThermostat extends IPSModule {
 		$data = json_decode(json_decode($JSONString, true)['Buffer'], true);
 	
 		$action = strtolower($data['result']['action']);
-		$room = strtolower($data['result']['parameters']['rooms']);
 		
+		if(array_key_exists('location', $data['result']['parameters']))
+			$room = strtolower($data['result']['parameters']['location']);
+		else
+			$room = "<missing information>";
+		
+		$component = strtolower($data['result']['parameters']['component']);
+			
 		$selectedRoom = strtolower($this->ReadPropertyString("room"));
-
+		
 		$log->LogMessage("Action: ".$action);
-		$log->LogMessage("Action filter: "."thermostatmode");
+		$log->LogMessage("Action filter: "."adjustmode");
 		$log->LogMessage("Room: ".$room);
 		$log->LogMessage("Room filter: ".$selectedRoom);
+		$log->LogMessage("Component: ".$component);
+		$log->LogMessage("Component filter: "."temperature");
+						
+		if($action==="adjustmode" && $room===$selectedRoom && $component==='temperature') {
 		
-		
-		if($action==="thermostatmode" && $room===$selectedRoom) {
-			$valueText = strtolower($data['result']['parameters']['light-action-switch1'][0]); 
-			$value = ($valueText=="off"?false:true);
+			$defaultSteps = $this->ReadPropertyInteger('defaultsteps');
 			
 			$instance = $this->ReadPropertyInteger("instanceid");
-			$switchType = $this->ReadPropertyString("switchtype");
 			
+			$defaultPreset = $this->ReadPropertyInteger("defaultpreset");
+		
+			$direction = "preset";
+			if(array_key_exists('direction', $data['result']['parameters']['state'][0])){
+				$direction = $data['result']['parameters']['state'][0]['direction'];
+				
+				if(array_key_exists('number', $data['result']['parameters']['state'][0]))
+					$value = $data['result']['parameters']['state'][0]['number'];
+				else
+					$value = $defaultSteps;
+				
+				if($direction==='up') {
+					$value+=GetValueInteger(IPS_GetVariableIdByName('Intensity', $instance));
+					if($value>30)
+						$value=30;
+				}
+				if($direction==='down') { 
+					$value=GetValueInteger(IPS_GetVariableIdByName('Intensity', $instance))-$value;
+					if($value<5)
+						$value=5;
+				}
+				
+				if($direction==='up to'||$direction==='down to')
+					$direction='preset';
+			} else {					
+				if(array_key_exists('number', $data['result']['parameters']['state'][0]))
+					$value = $data['result']['parameters']['state'][0]['number'];
+				else
+					$value = $defaultPreset;		
+			}
+			
+			$switchType = $this->ReadPropertyString("switchtype");
+				   
 			try{
 				if($switchType=="z-wave") {
 					$log->LogMessage("The system is z-wave");
 					ZW_ThermostatSetPointSet($instance, 1, $value);
 				} else if($switchType=="xcomfort"){
 					$log->LogMessage("The system is xComfort");
-					MXC_SetTemperature($instance, $value);
+					XC_SetTemperature($instance, $value);
 				}
 				
-				$logMessage = "The temperature was set to ".$value;	
+				$logMessage = ($direction=='preset'?"Adjusting temperasture to ".$value." degrees":"Adjusting temperature ".$direction." to ".$value." degrees");
+				//$logMessage.=" in the ".$room;
 				$log->LogMessage($logMessage);
 				
 				$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
@@ -73,18 +115,15 @@ class GoogleHomeThermostat extends IPSModule {
 				$log->LogMessage("Sendt response back to parent");
 			
 			} catch(exeption $ex) {
-				$log->LogMessage("The switch command failed: XY_SwitchMode(".$instance.", ".$value.")");
+				$log->LogMessage("The dim command failed: XYZ_DimMode(".$instance.", ".$value.")");
 			}
-			
-			
-		}  else {
+		
+
+		} else {
 			$log->LogMessage("Did not pass the filter test");	
 		}
 
-    }
-
-
-	
+	}
 }
 
 ?>
