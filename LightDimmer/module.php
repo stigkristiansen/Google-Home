@@ -39,7 +39,12 @@ class GoogleHomeLightDimmer extends IPSModule {
 		$data = json_decode(json_decode($JSONString, true)['Buffer'], true);
 	
 		$action = strtolower($data['result']['action']);
-		$room = strtolower($data['result']['parameters']['location']);
+		
+		if(array_key_exists('location', $data['result']['parameters']))
+			$room = strtolower($data['result']['parameters']['location']);
+		else
+			$room = "<missing informat>";
+		
 		$component = strtolower($data['result']['parameters']['component']);
 			
 		$selectedRoom = strtolower($this->ReadPropertyString("room"));
@@ -65,7 +70,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 					
 					if(array_key_exists('number', $data['result']['parameters']['state'][0]))
 						$value = $data['result']['parameters']['state'][0]['number'];
-					else
+					elseion
 						$value = $defaultSteps;
 					
 					if($direction==='up') {

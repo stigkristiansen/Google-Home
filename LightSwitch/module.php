@@ -38,7 +38,12 @@ class GoogleHomeLightSwitch extends IPSModule {
 		$data = json_decode(json_decode($JSONString, true)['Buffer'], true);
 	
 		$action = strtolower($data['result']['action']);
-		$room = strtolower($data['result']['parameters']['location']);
+		
+		if(array_key_exists('location', $data['result']['parameters']))
+			$room = strtolower($data['result']['parameters']['location']);
+		else
+			$room = "<missing informat>";
+		
 		$component = strtolower($data['result']['parameters']['component']);
 		$selectedRoom = strtolower($this->ReadPropertyString("room"));
 
