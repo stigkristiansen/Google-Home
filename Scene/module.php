@@ -69,7 +69,7 @@ class GoogleHomeScene extends IPSModule {
 
     }
 
-
+}
 	
 
 ?>
