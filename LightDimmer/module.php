@@ -43,7 +43,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 		if(array_key_exists('location', $data['result']['parameters']))
 			$room = strtolower($data['result']['parameters']['location']);
 		else
-			$room = "<missing informat>";
+			$room = "<missing information>";
 		
 		$component = strtolower($data['result']['parameters']['component']);
 			
@@ -70,7 +70,7 @@ class GoogleHomeLightDimmer extends IPSModule {
 					
 					if(array_key_exists('number', $data['result']['parameters']['state'][0]))
 						$value = $data['result']['parameters']['state'][0]['number'];
-					elseion
+					else
 						$value = $defaultSteps;
 					
 					if($direction==='up') {
