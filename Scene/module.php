@@ -2,7 +2,7 @@
 
 require_once(__DIR__ . "/../logging.php");
 
-class GoogleHomeLightSwitch extends IPSModule {
+class GoogleHomeScene extends IPSModule {
     
     public function Create(){
 	    //Stig
