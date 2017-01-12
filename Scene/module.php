@@ -38,7 +38,7 @@ class GoogleHomeScene extends IPSModule {
 	
 		$action = strtolower($data['result']['action']);
 		$component = strtolower($data['result']['parameters']['component']);
-		$scene = strtolower($data[result]['parameters']['scene']);
+		$scene = strtolower($data['result']['parameters']['scene']);
 		
 		$selectedScene = strtolower($this->ReadPropertyString("scene"));
 
@@ -50,8 +50,10 @@ class GoogleHomeScene extends IPSModule {
 		$log->LogMessage("Component filter: "."scene");
 		
 		if($action==="scenemode" && $component==='scene' && $scene===$selectedScene) {
-			$instance = $this->ReadPropertyInteger("scriptid");
-						
+			$scriptId = $this->ReadPropertyInteger("scriptid");
+
+			IPS_RunScript($scriptId);
+			
 			$logMessage = 'The scene '.$scene.' was executed ';	
 			$log->LogMessage($logMessage);
 			
@@ -69,6 +71,5 @@ class GoogleHomeScene extends IPSModule {
 
 
 	
-}
 
 ?>
