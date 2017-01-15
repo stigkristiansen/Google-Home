@@ -38,14 +38,20 @@ class GoogleHomeThermostat extends IPSModule {
 		
 		$data = json_decode(json_decode($JSONString, true)['Buffer'], true);
 	
-		$action = strtolower($data['result']['action']);
+		if(array_key_exists('action', $data['result']))
+			$action = strtolower($data['result']['action']);
+		else
+			$action = "<missing information>";
 		
 		if(array_key_exists('location', $data['result']['parameters']))
 			$room = strtolower($data['result']['parameters']['location']);
 		else
 			$room = "<missing information>";
 		
-		$component = strtolower($data['result']['parameters']['component']);
+		if(array_key_exists('component', $data['result']['parameters']))
+			$component = strtolower($data['result']['parameters']['component']);
+		else
+			$component = "<missing information>";
 			
 		$selectedRoom = strtolower($this->ReadPropertyString("room"));
 		
