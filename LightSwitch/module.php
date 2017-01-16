@@ -30,21 +30,26 @@ class GoogleHomeLightSwitch extends IPSModule {
     }
 
     public function ReceiveData($JSONString) {
-		
 		$log = new Logging($this->ReadPropertyBoolean("log"), IPS_Getname($this->InstanceID));
 
 		$log->LogMessage("Received json: ".json_decode($JSONString, true)['Buffer']);
 		
 		$data = json_decode(json_decode($JSONString, true)['Buffer'], true);
-	
-		$action = strtolower($data['result']['action']);
 		
-		if(array_key_exists('location', $data['result']['parameters']))
-			$room = strtolower($data['result']['parameters']['location']);
-		else
-			$room = "<missing informat>";
-		
-		$component = strtolower($data['result']['parameters']['component']);
+		$action = "<missing information>";
+		$room = "<missing information>";
+		$component = "<missing information>";
+		if(array_key_exists('result', $data)) {
+			if(array_key_exists('action', $data['result']))
+				$action = strtolower($data['result']['action']);
+					
+			if(array_key_exists('location', $data['result']['parameters']))
+				$room = strtolower($data['result']['parameters']['location']);
+					
+			if(array_key_exists('component', $data['result']['parameters']))		
+				$component = strtolower($data['result']['parameters']['component']);
+		}
+
 		$selectedRoom = strtolower($this->ReadPropertyString("room"));
 
 		$log->LogMessage("Action: ".$action);
@@ -55,39 +60,52 @@ class GoogleHomeLightSwitch extends IPSModule {
 		$log->LogMessage("Component filter: "."light");
 		
 		if($action==="switchmode" && $component==='light' && $room===$selectedRoom) {
-			$valueText = strtolower($data['result']['parameters']['state']); 
-			$value = ($valueText=="off"?false:true);
-			
-			$instance = $this->ReadPropertyInteger("instanceid");
-			$switchType = $this->ReadPropertyString("switchtype");
-			
-			try{
-				if($switchType=="z-wave") {
-					$log->LogMessage("The system is z-wave");
-					ZW_SwitchMode($instance, $value);
-				} else if($switchType=="xcomfort"){
-					$log->LogMessage("The system is xComfort");
-					MXC_SwitchMode($instance, $value);
+			$validState = false;
+			if(array_key_exists('state', $data['result']['parameters'])) {
+				$valueText = strtolower($data['result']['parameters']['state']); 
+				switch($valueText) {
+					case 'off':
+						$validState = true;
+						$value = false;
+						break;
+					case 'on':
+						$validState = true;
+						$value = true;
+						break;
 				}
-				
-				$logMessage = "The light was switched ".$valueText;	
-				$log->LogMessage($logMessage);
-				
-				$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
-					
-				$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
-				
-				$log->LogMessage("Sendt response back to parent");
-			
-			} catch(exeption $ex) {
-				$log->LogMessage("The switch command failed: XY_SwitchMode(".$instance.", ".$value.")");
 			}
 			
+			if($validState) {
+				$instance = $this->ReadPropertyInteger("instanceid");
+				$switchType = $this->ReadPropertyString("switchtype");
 			
-		}  else {
-			$log->LogMessage("Did not pass the filter test");	
-		}
+				try{
+					if($switchType=="z-wave") {
+						$log->LogMessage("The system is z-wave");
+						ZW_SwitchMode($instance, $value);
+					} else if($switchType=="xcomfort"){
+						$log->LogMessage("The system is xComfort");
+						MXC_SwitchMode($instance, $value);
+					}
+					$logMessage = "The light was switched ".$valueText;	
+					$log->LogMessage($logMessage);
+				} catch(exeption $ex) {
+					$logMessage = "The command failed";
+					$log->LogMessage("The switch command failed: XY_SwitchMode(".$instance.", ".$value.")");
+				}
+				
+			} else
+				$logMessage = "Invalid state";
+			
+			$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
+				
+			$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
+			
+			$log->LogMessage("Sendt response back to parent");
 
+		}  else 
+			$log->LogMessage("Did not pass the filter test");	
+		
     }
 
 
