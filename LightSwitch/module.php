@@ -20,8 +20,9 @@ class GoogleHomeLightSwitch extends IPSModule {
     public function ApplyChanges(){
         parent::ApplyChanges();
 		
-		$filter = $this->ReadPropertyString("filter"); //"(?=.*\bSwitchMode\b).*";                     
-		
+		//$filter = $this->ReadPropertyString("filter"); //"(?=.*\bSwitchMode\b).*";                     
+		$this->ReadPropertyString("room");
+		$filter = ".*(?=.*light)(?=.*SwitchMode)(?=.*".$room.").*";
 		$this->SetReceiveDataFilter($filter);
 		
 		$log = new Logging($this->ReadPropertyBoolean("log"), IPS_Getname($this->InstanceID));
