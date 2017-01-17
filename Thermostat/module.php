@@ -106,11 +106,7 @@ class GoogleHomeThermostat extends IPSModule {
 				
 				$direction="preset";
 				$validState=true;
-			} else {
-				$value = $defaultPreset;
-				$validState=true;
-				$direction="preset";
-			}
+			} 
 			
 			if($validState) {
 				$switchType = $this->ReadPropertyString("switchtype");
