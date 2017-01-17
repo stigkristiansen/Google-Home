@@ -113,7 +113,6 @@ class GoogleHomeThermostat extends IPSModule {
 			} 
 			
 			if($validState) {
-				
 					   
 				try{
 					if($switchType=="z-wave") {
@@ -127,7 +126,7 @@ class GoogleHomeThermostat extends IPSModule {
 					
 				} catch(exeption $ex) {
 					$logMessage="The command failed!";
-					$log->LogMessage("The SetPoint command failed: XYZ_SetPoint(".$instance.", ".$value.")");
+					$log->LogMessage("The SetPoint command failed for Instance ".$instance);
 				}
 				
 			} else
