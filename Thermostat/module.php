@@ -85,12 +85,12 @@ class GoogleHomeThermostat extends IPSModule {
 					$value = $defaultSteps;
 				
 				if($direction==='up') {
-					$value+=GetValueInteger(IPS_GetVariableIdByName('Intensity', $instance));
+					$value+=GetValueInteger(IPS_GetVariableIdByName('SetPoint (Heating)', $instance));
 					if($value>30)
 						$value=30;
 				}
 				if($direction==='down') { 
-					$value=GetValueInteger(IPS_GetVariableIdByName('Intensity', $instance))-$value;
+					$value=GetValueInteger(IPS_GetVariableIdByName('SetPoint (Heating)', $instance))-$value;
 					if($value<5)
 						$value=5;
 				}
@@ -119,7 +119,7 @@ class GoogleHomeThermostat extends IPSModule {
 						$log->LogMessage("The system is xComfort");
 						XC_SetTemperature($instance, $value);
 					}
-					$logMessage = ($direction=='preset'?"Adjusting temperasture to ".$value." degrees":"Adjusting temperature ".$direction." to ".$value." degrees");
+					$logMessage = ($direction=='preset'?"Adjusting temperature to ".$value." degrees":"Adjusting temperature ".$direction." to ".$value." degrees");
 					
 				} catch(exeption $ex) {
 					$logMessage="The command failed!";
