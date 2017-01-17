@@ -21,7 +21,6 @@ class GoogleHomeThermostat extends IPSModule {
     public function ApplyChanges(){
         parent::ApplyChanges();
 		
-		//$filter = $this->ReadPropertyString("filter"); //"(?=.*\bSwitchMode\b).*";                     
 		$room = strtolower($this->ReadPropertyString("room"));
 		$filter = ".*(?=.*temperature)(?=.*AdjustMode)(?=.*".$room.").*";
 		$this->SetReceiveDataFilter($filter);
@@ -39,20 +38,18 @@ class GoogleHomeThermostat extends IPSModule {
 		
 		$data = json_decode(json_decode($JSONString, true)['Buffer'], true);
 	
+		$action = "<missing information>";
+		$room = "<missing information>";
+		$component = "<missing information>";
+		
 		if(array_key_exists('action', $data['result']))
 			$action = strtolower($data['result']['action']);
-		else
-			$action = "<missing information>";
-		
+				
 		if(array_key_exists('location', $data['result']['parameters']))
 			$room = strtolower($data['result']['parameters']['location']);
-		else
-			$room = "<missing information>";
 		
 		if(array_key_exists('component', $data['result']['parameters']))
 			$component = strtolower($data['result']['parameters']['component']);
-		else
-			$component = "<missing information>";
 			
 		$selectedRoom = strtolower($this->ReadPropertyString("room"));
 		
@@ -66,14 +63,21 @@ class GoogleHomeThermostat extends IPSModule {
 		if($action==="adjustmode" && $room===$selectedRoom && $component==='temperature') {
 		
 			$defaultSteps = $this->ReadPropertyInteger('defaultsteps');
-			
 			$instance = $this->ReadPropertyInteger("instanceid");
-			
 			$defaultPreset = $this->ReadPropertyInteger("defaultpreset");
 		
-			$direction = "preset";
+			$validState = false;
 			if(array_key_exists('direction', $data['result']['parameters']['state'][0])){
-				$direction = $data['result']['parameters']['state'][0]['direction'];
+				$direction = strtolower($data['result']['parameters']['state'][0]['direction']);
+				
+				switch($direction) {
+					case 'up':
+					case 'down':
+					case 'up to':
+					case 'down to':
+						$validState=true;
+						break;
+				}
 				
 				if(array_key_exists('number', $data['result']['parameters']['state'][0]))
 					$value = $data['result']['parameters']['state'][0]['number'];
@@ -93,42 +97,52 @@ class GoogleHomeThermostat extends IPSModule {
 				
 				if($direction==='up to'||$direction==='down to')
 					$direction='preset';
-			} else {					
+			
+			} else { 
 				if(array_key_exists('number', $data['result']['parameters']['state'][0]))
 					$value = $data['result']['parameters']['state'][0]['number'];
 				else
 					$value = $defaultPreset;		
+				
+				$direction="preset";
+				$validState=true;
+			} else {
+				$value = $defaultPreset;
+				$validState=true;
+				$direction="preset";
 			}
 			
-			$switchType = $this->ReadPropertyString("switchtype");
-				   
-			try{
-				if($switchType=="z-wave") {
-					$log->LogMessage("The system is z-wave");
-					ZW_ThermostatSetPointSet($instance, 1, $value);
-				} else if($switchType=="xcomfort"){
-					$log->LogMessage("The system is xComfort");
-					XC_SetTemperature($instance, $value);
+			if($validState) {
+				$switchType = $this->ReadPropertyString("switchtype");
+					   
+				try{
+					if($switchType=="z-wave") {
+						$log->LogMessage("The system is z-wave");
+						ZW_ThermostatSetPointSet($instance, 1, $value);
+					} else if($switchType=="xcomfort"){
+						$log->LogMessage("The system is xComfort");
+						XC_SetTemperature($instance, $value);
+					}
+					$logMessage = ($direction=='preset'?"Adjusting temperasture to ".$value." degrees":"Adjusting temperature ".$direction." to ".$value." degrees");
+					
+				} catch(exeption $ex) {
+					$logMessage="The command failed!";
+					$log->LogMessage("The SetPoint command failed: XYZ_SetPoint(".$instance.", ".$value.")");
 				}
 				
-				$logMessage = ($direction=='preset'?"Adjusting temperasture to ".$value." degrees":"Adjusting temperature ".$direction." to ".$value." degrees");
-				//$logMessage.=" in the ".$room;
-				$log->LogMessage($logMessage);
-				
-				$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
-					
-				$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
-				
-				$log->LogMessage("Sendt response back to parent");
+			} else
+				$logMessage = "Invalid state";
 			
-			} catch(exeption $ex) {
-				$log->LogMessage("The dim command failed: XYZ_DimMode(".$instance.", ".$value.")");
-			}
+			$log->LogMessage($logMessage);
+				
+			$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
+				
+			$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
+			
+			$log->LogMessage("Sendt response back to parent");
 		
-
-		} else {
+		} else 
 			$log->LogMessage("Did not pass the filter test");	
-		}
 
 	}
 }

@@ -89,7 +89,7 @@ class GoogleHomeLightSwitch extends IPSModule {
 					$logMessage = "The light was switched ".$valueText;	
 					$log->LogMessage($logMessage);
 				} catch(exeption $ex) {
-					$logMessage = "The command failed";
+					$logMessage = "The command failed!";
 					$log->LogMessage("The switch command failed: XY_SwitchMode(".$instance.", ".$value.")");
 				}
 				
