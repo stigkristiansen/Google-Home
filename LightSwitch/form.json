@@ -8,7 +8,6 @@
 				
             ]
 		},
-		{ "type": "ValidationTextBox", "name": "filter", "caption": "Filter" },
 		{ "type": "SelectInstance", "name": "instanceid", "caption": "Light Switch Mapping" },
 		{ "type": "CheckBox", "name": "log", "caption": "Enable logging" },
 				{ "type": "Select", "name": "room", "caption": "Google Home Room",

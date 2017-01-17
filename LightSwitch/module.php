@@ -12,7 +12,6 @@ class GoogleHomeLightSwitch extends IPSModule {
         $this->RegisterPropertyBoolean ("log", false );
 		$this->RegisterPropertyInteger("instanceid",0);	
 		$this->RegisterPropertyString("switchtype", "z-wave");
-		$this->RegisterPropertyString("filter", "");
 		$this->RegisterPropertyString("room", "Bedroom");
     
 	}
@@ -20,7 +19,6 @@ class GoogleHomeLightSwitch extends IPSModule {
     public function ApplyChanges(){
         parent::ApplyChanges();
 		
-		//$filter = $this->ReadPropertyString("filter"); //"(?=.*\bSwitchMode\b).*";                     
 		$room = strtolower($this->ReadPropertyString("room"));
 		$filter = ".*(?=.*light)(?=.*SwitchMode)(?=.*".$room.").*";
 		$this->SetReceiveDataFilter($filter);
@@ -102,7 +100,7 @@ class GoogleHomeLightSwitch extends IPSModule {
 				
 			$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
 			
-			$log->LogMessage("Sendt response back to parent");
+			$log->LogMessage("Sendt the response back to the controller");
 
 		}  else 
 			$log->LogMessage("Did not pass the filter test");	
