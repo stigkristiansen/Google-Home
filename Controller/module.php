@@ -28,15 +28,9 @@ class GoogleHomeController extends IPSModule {
 
 	public function ForwardData($JSONString) {
 		$response = json_decode($JSONString, true)['Buffer'];
-				
-		IPS_LogMessage("Controller", "Got data from child: ".$response);
-		
-		//$bufferId = $this->GetIDForIdent("buffer");
-		//SetValueString($bufferId, $response);
 		
 		$this->SetBuffer('buffer', $response);
 		
-		IPS_LogMessage("Controller", "Set buffer to ".$response);
 	}
 	
     public function HandleWebData() {
@@ -76,9 +70,6 @@ class GoogleHomeController extends IPSModule {
 
 		$log->LogMessage("Sending command to child device");
 		
-		//$bufferId = $this->GetIDForIdent("buffer");
-		//SetValueString($bufferId, "");
-		
 		$this->SetBuffer('buffer', '');
 		$this->SendDataToChildren(json_encode(Array("DataID" => "{11ACFC89-5700-4B2A-A93C-18CAB413839C}", "Buffer" => $jsonRequest)));
 
@@ -86,17 +77,17 @@ class GoogleHomeController extends IPSModule {
 		
 		$response="";
 		for($x=0;$x<5;$x++) {
-			//$response = GetValueString($bufferId);
 			$response = $this->GetBuffer('buffer');
-			IPS_LogMessage("Controller:", "Response from child: ".$response);
 			
-			if(strlen($response)>0)
+			if(strlen($response)>0) {
+				$log->LogMessage("Response from child: ".$response);
 				break;
-			
+			} else
+				$log->LogMessage("Still waiting...");
+				
 			IPS_Sleep(1000);
 		}
 			
-				
 		if(strlen($response)==0) {
 			$log->LogMessage("Waiting for response timed out!");
 			$this->Unlock("HandleWebData");
