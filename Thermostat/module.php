@@ -61,7 +61,8 @@ class GoogleHomeThermostat extends IPSModule {
 		$log->LogMessage("Component filter: "."temperature");
 						
 		if($action==="adjustmode" && $room===$selectedRoom && $component==='temperature') {
-		
+			
+			$switchType = $this->ReadPropertyString("switchtype");
 			$defaultSteps = $this->ReadPropertyInteger('defaultsteps');
 			$instance = $this->ReadPropertyInteger("instanceid");
 			$defaultPreset = $this->ReadPropertyInteger("defaultpreset");
@@ -84,14 +85,15 @@ class GoogleHomeThermostat extends IPSModule {
 				else
 					$value = $defaultSteps;
 				
+				$variableName = ($switchType=='z-wave'?'SetPoint (Heating)':'Target Temperature');
 				if($direction==='up') {
-					$oldTemp = GetValueFloat(IPS_GetVariableIdByName('SetPoint (Heating)', $instance)); 
+					$oldTemp = GetValueFloat(IPS_GetVariableIdByName($variableName, $instance)); 
 					$value+= intval($oldTemp);
 					if($value>30)
 						$value=30;
 				}
-				if($direction==='down') { 
-					$oldTemp = GetValueFloat(IPS_GetVariableIdByName('SetPoint (Heating)', $instance)); 
+				if($direction==='down') {
+					$oldTemp = GetValueFloat(IPS_GetVariableIdByName($variableName, $instance)); 
 					$value=intval($oldTemp)-$value;
 					if($value<5)
 						$value=5;
@@ -111,7 +113,7 @@ class GoogleHomeThermostat extends IPSModule {
 			} 
 			
 			if($validState) {
-				$switchType = $this->ReadPropertyString("switchtype");
+				
 					   
 				try{
 					if($switchType=="z-wave") {
