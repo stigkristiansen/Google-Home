@@ -86,7 +86,7 @@ class GoogleHomeThermostat extends IPSModule {
 				
 				if($direction==='up') {
 					$oldTemp = GetValueInteger(IPS_GetVariableIdByName('SetPoint (Heating)', $instance)); 
-					$value+= intval($oldTemp)
+					$value+= intval($oldTemp);
 					if($value>30)
 						$value=30;
 				}
