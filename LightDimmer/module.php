@@ -40,14 +40,18 @@ class GoogleHomeLightDimmer extends IPSModule {
 		
 		$data = json_decode(json_decode($JSONString, true)['Buffer'], true);
 	
-		$action = strtolower($data['result']['action']);
+		$action = "<missing information>";
+		$room = "<missing information>";
+		$component = "<missing information>";
+		
+		if(array_key_exists('action', $data['result']))
+			$action = strtolower($data['result']['action']);
 		
 		if(array_key_exists('location', $data['result']['parameters']))
 			$room = strtolower($data['result']['parameters']['location']);
-		else
-			$room = "<missing information>";
 		
-		$component = strtolower($data['result']['parameters']['component']);
+		if(array_key_exists('component', $data['result']['parameters']))
+			$component = strtolower($data['result']['parameters']['component']);
 			
 		$selectedRoom = strtolower($this->ReadPropertyString("room"));
 		
@@ -60,15 +64,24 @@ class GoogleHomeLightDimmer extends IPSModule {
 						
 		if(($action==="switchmode" || $action==="adjustmode") && $room===$selectedRoom && $component==='light') {
 			if($action==="adjustmode") {
+				
 				$defaultSteps = $this->ReadPropertyInteger('defaultsteps');
-				
+				$switchType = $this->ReadPropertyString("switchtype");
 				$instance = $this->ReadPropertyInteger("instanceid");
-				
 				$defaultPreset = $this->ReadPropertyInteger("defaultpreset");
 			
-				$direction = "preset";
+				$validState = false;
 				if(array_key_exists('direction', $data['result']['parameters']['state'][0])){
-					$direction = $data['result']['parameters']['state'][0]['direction'];
+					$direction = strtolower($data['result']['parameters']['state'][0]['direction']);
+					
+					switch($direction) {
+						case 'up':
+						case 'down':
+						case 'up to':
+						case 'down to':
+							$validState=true;
+							break;
+					}
 					
 					if(array_key_exists('number', $data['result']['parameters']['state'][0]))
 						$value = $data['result']['parameters']['state'][0]['number'];
@@ -76,79 +89,103 @@ class GoogleHomeLightDimmer extends IPSModule {
 						$value = $defaultSteps;
 					
 					if($direction==='up') {
-						$value+=GetValueInteger(IPS_GetVariableIdByName('Intensity', $instance));
+						$oldTemp = GetValueInteger(IPS_GetVariableIdByName('Intensity', $instance)); 
+						$value+= intval($oldTemp);
 						if($value>100)
 							$value=100;
 					}
-					if($direction==='down') { 
-						$value=GetValueInteger(IPS_GetVariableIdByName('Intensity', $instance))-$value;
+					if($direction==='down') {
+						$oldTemp = GetValueInteger(IPS_GetVariableIdByName('Intensity', $instance)); 
+						$value=intval($oldTemp)-$value;
 						if($value<0)
 							$value=0;
 					}
 					
 					if($direction==='up to'||$direction==='down to')
 						$direction='preset';
-				} else {					
+				
+				} else { 
 					if(array_key_exists('number', $data['result']['parameters']['state'][0]))
 						$value = $data['result']['parameters']['state'][0]['number'];
 					else
 						$value = $defaultPreset;		
+					
+					$direction="preset";
+					$validState=true;
 				}
 				
-				$switchType = $this->ReadPropertyString("switchtype");
-				       
-				try{
-					if($switchType=="z-wave") {
-						$log->LogMessage("The system is z-wave");
-						ZW_DimSet($instance, $value);
-					} else if($switchType=="xcomfort"){
-						$log->LogMessage("The system is xComfort");
-						MXC_DimSet($instance, $value);
+				if($validState) {
+					   
+					try{
+						if($switchType=="z-wave") {
+							$log->LogMessage("The system is z-wave");
+							ZW_DimSet($instance, $value);
+						} else if($switchType=="xcomfort"){
+							$log->LogMessage("The system is xComfort");
+							MXC_DimSet($instance, $value);
+						}
+						$logMessage = ($direction=='preset'?"Adjusting light to ".$value." percent":"Adjusting light ".$direction." to ".$value." percent");
+						
+					} catch(exeption $ex) {
+						$logMessage="The command failed!";
+						$log->LogMessage("The Dim command failed for Instance ".$instance);
 					}
 					
-					$logMessage = ($direction=='preset'?"Dimming light to ".$value." percent":"Dimming light ".$direction." to ".$value." percent");
-					//$logMessage.=" in the ".$room;
-					$log->LogMessage($logMessage);
+				} else
+					$logMessage = "Invalid state";
+			
+				$log->LogMessage($logMessage);
 					
-					$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
-						
-					$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
+				$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
 					
-					$log->LogMessage("Sendt response back to parent");
+				$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
 				
-				} catch(exeption $ex) {
-					$log->LogMessage("The dim command failed: XYZ_DimMode(".$instance.", ".$value.")");
-				}
+				$log->LogMessage("Sendt response back to parent");	
 			}
 
 			if($action==="switchmode") {
-				$valueText = strtolower($data['result']['parameters']['state']); 
-				$value = ($valueText=="off"?false:true);
-							
-				$instance = $this->ReadPropertyInteger("instanceid");
-				$switchType = $this->ReadPropertyString("switchtype");
+				$validState = false;
+				if(array_key_exists('state', $data['result']['parameters'])) {
+					$valueText = strtolower($data['result']['parameters']['state']); 
+					switch($valueText) {
+						case 'off':
+							$validState = true;
+							$value = false;
+							break;
+						case 'on':
+							$validState = true;
+							$value = true;
+							break;
+					}
+				}
 				
-				try{
-					if($switchType=="z-wave") {
-						$log->LogMessage("The system is z-wave");
-						ZW_SwitchMode($instance, $value);
-					} else if($switchType=="xcomfort"){
-						$log->LogMessage("The system is xComfort");
-						MXC_SwitchMode($instance, $value);
+				if($validState) {
+					$instance = $this->ReadPropertyInteger("instanceid");
+					$switchType = $this->ReadPropertyString("switchtype");
+				
+					try{
+						if($switchType=="z-wave") {
+							$log->LogMessage("The system is z-wave");
+							ZW_SwitchMode($instance, $value);
+						} else if($switchType=="xcomfort"){
+							$log->LogMessage("The system is xComfort");
+							MXC_SwitchMode($instance, $value);
+						}
+						$logMessage = "The light was switched ".$valueText;	
+						$log->LogMessage($logMessage);
+					} catch(exeption $ex) {
+						$logMessage = "The command failed!";
+						$log->LogMessage("The Switch command failed for Instance ".$instance);
 					}
 					
-					$logMessage = "The light was switched ".$valueText;	
-					$log->LogMessage($logMessage);
-					
-					$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
-						
-					$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
-					
-					$log->LogMessage("Sendt response back to parent");
+				} else
+					$logMessage = "Invalid state";
 				
-				} catch(exeption $ex) {
-					$log->LogMessage("The switch command failed: XY_SwitchMode(".$instance.", ".$value.")");
-				}
+				$response = '{ "speech": "'.$logMessage.'", "DisplayText": "'.$logMessage.'", "Source": "IP-Symcon"}';
+					
+				$result = $this->SendDataToParent(json_encode(Array("DataID" => "{8A83D53D-934E-4DD7-8054-A794D0723FED}", "Buffer" => $response)));
+				
+				$log->LogMessage("Sendt the response back to the controller");
 
 			}
 		} else {
