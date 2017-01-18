@@ -36,22 +36,19 @@ class GoogleHomeScene extends IPSModule {
 		
 		$data = json_decode(json_decode($JSONString, true)['Buffer'], true);
 	
+		$action = "<missing information>"; 
+		$component = "<missing information>";
+		$scene = "<missing information>";
+			
 		if(array_key_exists('action', $data['result']))
 			$action = strtolower($data['result']['action']);
-		else
-			$action = "<missing information>"; 
-		
 		
 		if(array_key_exists('component', $data['result']['parameters']))
 			$component = strtolower($data['result']['parameters']['component']);
-		else
-			$component = "<missing information>";
 		
 		if(array_key_exists('scene', $data['result']['parameters']))
 			$scene = strtolower($data['result']['parameters']['scene']);
-		else
-			$scene = "<missing information>";
-				
+		
 		$selectedScene = strtolower($this->ReadPropertyString("scene"));
 
 		$log->LogMessage("Action: ".$action);

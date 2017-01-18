@@ -21,8 +21,6 @@ class GoogleHomeLightDimmer extends IPSModule {
     public function ApplyChanges(){
         parent::ApplyChanges();
 		
-		//$filter = $this->ReadPropertyString("filter"); //"(?=.*\bSwitchMode\b).*";                     
-		
 		$room = strtolower($this->ReadPropertyString("room"));
 		$filter = "(?=.*light)(?=.*".$room.").*(AdjustMode|SwitchMode).*";
 		$this->SetReceiveDataFilter($filter);
