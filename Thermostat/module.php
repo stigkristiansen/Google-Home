@@ -42,7 +42,7 @@ class GoogleHomeThermostat extends IPSModule {
 		$room = "<missing information>";
 		$component = "<missing information>";
 		
-		if(array_key_exists('action', $data['result']))
+		if(array_key_exists, $data['result']))
 			$action = strtolower($data['result']['action']);
 				
 		if(array_key_exists('location', $data['result']['parameters']))
